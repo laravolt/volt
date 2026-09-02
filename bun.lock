@@ -6,7 +6,7 @@
       "dependencies": {
         "better-sqlite3": "12.8.0",
         "remix": "3.0.0-rc.1",
-        "volt-preline": "git+https://github.com/laravolt/volt-preline.git#376447bda54ebfd6c9ea677320078e5e50640f39",
+        "volt-preline": "^0.1.0",
       },
       "devDependencies": {
         "@playwright/test": "1.62.1",
@@ -642,7 +642,7 @@
 
     "vanilla-calendar-pro": ["vanilla-calendar-pro@3.3.1", "", {}, "sha512-3+PCVaaZoF03+D9oXzPQwEMu5DeAlllSOfpSmzojGZSLFb9OJYK4wMtMlPDNOe59DyEy8CGrc3Aw9TvlAnoANg=="],
 
-    "volt-preline": ["volt-preline@github:laravolt/volt-preline#376447b", { "dependencies": { "preline": "5.0.0" }, "peerDependencies": { "@tailwindcss/forms": "^0.5.0", "remix": "3.0.0-rc.1", "tailwindcss": "^4.0.0" } }, "laravolt-volt-preline-376447b"],
+    "volt-preline": ["volt-preline@0.1.0", "", { "dependencies": { "preline": "5.0.0" }, "peerDependencies": { "@tailwindcss/forms": "^0.5.0", "remix": "3.0.0-rc.1", "tailwindcss": "^4.0.0" } }, "sha512-1GamBVfll2rJn8snLlpz/umtA5LC1IaOyDkZl/ECe6v0UAS/a/1zcpVazhios6/JMvsCFhEEuytCZsGmFgeIGQ=="],
 
     "wrappy": ["wrappy@1.0.2", "", {}, "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="],
 

@@ -26,7 +26,7 @@
   "dependencies": {
     "better-sqlite3": "12.8.0",
     "remix": "3.0.0-rc.1",
-    "volt-preline": "git+https://github.com/laravolt/volt-preline.git#376447bda54ebfd6c9ea677320078e5e50640f39"
+    "volt-preline": "^0.1.0"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",
