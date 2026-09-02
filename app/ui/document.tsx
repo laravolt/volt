@@ -1,5 +1,7 @@
 import type { Handle, RemixNode } from 'remix/ui'
 
+import { darkModeHeadScript } from 'velix-preline/dark-mode'
+
 import { entryHref, entryPreloads } from '../assets.ts'
 
 export interface DocumentProps {
@@ -17,6 +19,7 @@ export function Document(handle: Handle<DocumentProps>) {
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="color-scheme" content="light dark" />
+          <script>{darkModeHeadScript()}</script>
           <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
           <link rel="preconnect" href="https://rsms.me/" />
           <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
@@ -28,7 +31,7 @@ export function Document(handle: Handle<DocumentProps>) {
           ))}
           <script type="module" src={entryHref}></script>
         </head>
-        <body className="h-full bg-white text-zinc-950 antialiased lg:bg-zinc-100 dark:bg-zinc-900 dark:text-white dark:lg:bg-zinc-950">
+        <body className="h-full bg-background text-foreground antialiased">
           {children}
         </body>
       </html>

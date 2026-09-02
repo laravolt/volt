@@ -1,8 +1,8 @@
 import type { Handle } from 'remix/ui'
-import { Button } from 'velix-catalyst/button'
-import { ErrorMessage, Field, Label } from 'velix-catalyst/fieldset'
-import { Input } from 'velix-catalyst/input'
-import { Strong, Text, TextLink } from 'velix-catalyst/text'
+import { Button } from 'velix-preline/button'
+import { ErrorMessage, Field, Label } from 'velix-preline/fieldset'
+import { Input } from 'velix-preline/input'
+import { Strong, Text, TextLink } from 'velix-preline/text'
 
 import { routes } from '../../routes.ts'
 import { AuthCard } from '../../ui/auth-card.tsx'
@@ -32,7 +32,7 @@ export function ForgotPasswordPage(handle: Handle<{ csrfToken: string; flash?: F
           <Input name="identifier" value={values.identifier} autocomplete="username" required invalid={Boolean(errors.identifier)} />
           {errors.identifier ? <ErrorMessage>{errors.identifier}</ErrorMessage> : null}
         </Field>
-        <Button type="submit" className="w-full">
+        <Button type="submit" color="blue" className="w-full">
           Send reset link
         </Button>
       </AuthCard>
@@ -52,7 +52,7 @@ export function ResetPasswordPage(handle: Handle<{ csrfToken: string; token: str
           <Input type="password" name="password" autocomplete="new-password" required invalid={Boolean(errors.password)} />
           {errors.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
         </Field>
-        <Button type="submit" className="w-full">
+        <Button type="submit" color="blue" className="w-full">
           Update password
         </Button>
       </AuthCard>

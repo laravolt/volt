@@ -1,7 +1,7 @@
-/** Catalyst-style auth page: centered card with logo, heading and a form. */
+/** Auth page: centered card with logo, heading and a form. */
 import type { Handle, RemixNode } from 'remix/ui'
-import { AuthLayout } from 'velix-catalyst/auth-layout'
-import { Heading } from 'velix-catalyst/heading'
+import { AuthLayout } from 'velix-preline/auth-layout'
+import { Heading } from 'velix-preline/heading'
 
 import { routes } from '../routes.ts'
 import { Document } from './document.tsx'

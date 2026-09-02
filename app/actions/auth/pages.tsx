@@ -1,8 +1,8 @@
 import type { Handle } from 'remix/ui'
-import { Button } from 'velix-catalyst/button'
-import { ErrorMessage, Field, Label } from 'velix-catalyst/fieldset'
-import { Input } from 'velix-catalyst/input'
-import { Strong, Text, TextLink } from 'velix-catalyst/text'
+import { Button } from 'velix-preline/button'
+import { ErrorMessage, Field, Label } from 'velix-preline/fieldset'
+import { Input } from 'velix-preline/input'
+import { Strong, Text, TextLink } from 'velix-preline/text'
 
 import { routes } from '../../routes.ts'
 import { AuthCard } from '../../ui/auth-card.tsx'
@@ -51,7 +51,7 @@ export function LoginPage(handle: Handle<AuthPageProps>) {
             </TextLink>
           </Text>
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" color="blue" className="w-full">
           Sign in
         </Button>
         {googleEnabled ? (
@@ -97,7 +97,7 @@ export function RegisterPage(handle: Handle<AuthPageProps>) {
           <Input type="password" name="password" autocomplete="new-password" required invalid={Boolean(errors.password)} />
           {errors.password ? <ErrorMessage>{errors.password}</ErrorMessage> : null}
         </Field>
-        <Button type="submit" className="w-full">
+        <Button type="submit" color="blue" className="w-full">
           Create account
         </Button>
       </AuthCard>

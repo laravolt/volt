@@ -1,4 +1,7 @@
 import { run } from 'remix/ui'
+import { installDarkMode } from 'velix-preline/dark-mode'
+
+installDarkMode()
 
 const app = run({
   async loadModule(moduleUrl, exportName) {

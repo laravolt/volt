@@ -1,9 +1,9 @@
 /**
  * Small form helpers shared by pages: CSRF hidden field, flash/notice banner, error types.
- * Visual components come from `velix-catalyst`.
+ * Visual components come from `velix-preline`.
  */
 import type { Handle } from 'remix/ui'
-import { Text } from 'velix-catalyst/text'
+import { Text } from 'velix-preline/text'
 
 export type FieldErrors = Record<string, string>
 
@@ -16,7 +16,7 @@ export function CsrfField(handle: Handle<{ token: string }>) {
   return () => <input type="hidden" name="_csrf" value={handle.props.token} />
 }
 
-/** Inline notice (Catalyst has only modal alerts). Renders nothing without a message. */
+/** Inline notice (the UI kits only ship modal alerts). Renders nothing without a message. */
 export function Notice(handle: Handle<{ flash?: FlashMessages; error?: string }>) {
   return () => {
     let { flash, error } = handle.props

@@ -1,12 +1,12 @@
 /**
- * Admin users table with bulk delete + confirmation (Catalyst Table/Checkbox/Alert), hydrated island.
+ * Admin users table with bulk delete + confirmation (Table/Checkbox/Alert), hydrated island.
  */
 import { clientEntry, on, type Handle } from 'remix/ui'
-import { Alert, AlertActions, AlertDescription, AlertTitle } from 'velix-catalyst/alert'
-import { Badge } from 'velix-catalyst/badge'
-import { Button } from 'velix-catalyst/button'
-import { Checkbox } from 'velix-catalyst/checkbox'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'velix-catalyst/table'
+import { Alert, AlertActions, AlertDescription, AlertTitle } from 'velix-preline/alert'
+import { Badge } from 'velix-preline/badge'
+import { Button } from 'velix-preline/button'
+import { Checkbox } from 'velix-preline/checkbox'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'velix-preline/table'
 
 export type UsersTableUser = {
   id: string
@@ -67,11 +67,11 @@ export const UsersTable = clientEntry<UsersTableProps>(import.meta.url, function
                   {u.id === currentUserId ? null : <Checkbox name="ids" value={u.id} aria-label={`Select ${u.email}`} />}
                 </TableCell>
                 <TableCell className="font-medium">{u.name ?? '—'}</TableCell>
-                <TableCell className="text-zinc-500">{u.email}</TableCell>
+                <TableCell className="text-muted-foreground">{u.email}</TableCell>
                 <TableCell>
                   <Badge color={u.is_admin ? 'lime' : 'zinc'}>{u.is_admin ? 'admin' : 'user'}</Badge>
                 </TableCell>
-                <TableCell className="text-right text-zinc-500 tabular-nums">{new Date(u.created_at).toLocaleDateString('en-GB')}</TableCell>
+                <TableCell className="text-right text-muted-foreground tabular-nums">{new Date(u.created_at).toLocaleDateString('en-GB')}</TableCell>
               </TableRow>
             ))}
           </TableBody>

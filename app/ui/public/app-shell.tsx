@@ -1,9 +1,9 @@
 /**
- * Application shell (Catalyst StackedLayout) as a hydrated island so the account Dropdown and the
+ * Application shell (StackedLayout) as a hydrated island so the account Dropdown and the
  * mobile navigation drawer work. Page content is passed as `children`.
  */
 import { clientEntry, on, type Handle, type RemixNode } from 'remix/ui'
-import { Avatar } from 'velix-catalyst/avatar'
+import { Avatar } from 'velix-preline/avatar'
 import {
   Dropdown,
   DropdownButton,
@@ -11,10 +11,10 @@ import {
   DropdownItem,
   DropdownLabel,
   DropdownMenu,
-} from 'velix-catalyst/dropdown'
-import { Navbar, NavbarDivider, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'velix-catalyst/navbar'
-import { Sidebar, SidebarBody, SidebarFooter, SidebarHeader, SidebarItem, SidebarLabel, SidebarSection } from 'velix-catalyst/sidebar'
-import { StackedLayout } from 'velix-catalyst/stacked-layout'
+} from 'velix-preline/dropdown'
+import { Navbar, NavbarDivider, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'velix-preline/navbar'
+import { Sidebar, SidebarBody, SidebarFooter, SidebarHeader, SidebarItem, SidebarLabel, SidebarSection } from 'velix-preline/sidebar'
+import { StackedLayout } from 'velix-preline/stacked-layout'
 
 import { routes } from '../../routes.ts'
 import { ArrowRightStartOnRectangleIcon, ChevronDownIcon, HomeIcon, UserIcon } from './icons.tsx'
@@ -87,7 +87,7 @@ export const AppShell = clientEntry<AppShellProps>(import.meta.url, function App
                   }}
                 >
                   <DropdownButton as={NavbarItem} aria-label="Account menu">
-                    <Avatar src={user.avatar} initials={user.avatar ? undefined : initials} className="size-8 bg-zinc-900 text-white dark:bg-white dark:text-black" square />
+                    <Avatar src={user.avatar} initials={user.avatar ? undefined : initials} className="size-8 bg-primary text-primary-foreground" square />
                     <ChevronDownIcon />
                   </DropdownButton>
                   <DropdownMenu className="min-w-64" anchor="bottom end">

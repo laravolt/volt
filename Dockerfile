@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 ENV PATH="/root/.bun/bin:${PATH}"
 WORKDIR /app
 
-# Install all deps (Tailwind CLI is a devDependency needed to build CSS). velix-catalyst is a
+# Install all deps (Tailwind CLI is a devDependency needed to build CSS). velix-preline is a
 # private git dependency: pass credentials via BuildKit secret or a token in the URL at build time.
 FROM base AS build
 COPY package.json bun.lock ./

@@ -1,10 +1,10 @@
 import type { Handle } from 'remix/ui'
-import { Button } from 'velix-catalyst/button'
-import { Divider } from 'velix-catalyst/divider'
-import { Description, ErrorMessage, Field, Fieldset, Label } from 'velix-catalyst/fieldset'
-import { Heading, Subheading } from 'velix-catalyst/heading'
-import { Input } from 'velix-catalyst/input'
-import { Text } from 'velix-catalyst/text'
+import { Button } from 'velix-preline/button'
+import { Divider } from 'velix-preline/divider'
+import { Description, ErrorMessage, Field, Fieldset, Label } from 'velix-preline/fieldset'
+import { Heading, Subheading } from 'velix-preline/heading'
+import { Input } from 'velix-preline/input'
+import { Text } from 'velix-preline/text'
 
 import { routes } from '../../routes.ts'
 import type { AuthUser } from '../../services/auth.service.ts'
@@ -89,7 +89,7 @@ export function ProfilePage(handle: Handle<{ user: AuthUser; profile: PublicUser
               <Button type="reset" plain>
                 Reset
               </Button>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" color="blue">Save changes</Button>
             </div>
           </form>
 

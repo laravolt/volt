@@ -1,8 +1,8 @@
 import type { Handle } from 'remix/ui'
-import { Button } from 'velix-catalyst/button'
-import { Heading } from 'velix-catalyst/heading'
-import { Navbar, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'velix-catalyst/navbar'
-import { Text } from 'velix-catalyst/text'
+import { Button } from 'velix-preline/button'
+import { Heading } from 'velix-preline/heading'
+import { Navbar, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'velix-preline/navbar'
+import { Text } from 'velix-preline/text'
 
 import { routes } from '../routes.ts'
 import type { AuthUser } from '../services/auth.service.ts'
@@ -13,8 +13,8 @@ export function HomePage(handle: Handle<{ user: AuthUser | null; csrfToken: stri
     let { user } = handle.props
     return (
       <Document title="Home">
-        <div className="relative isolate flex min-h-svh w-full flex-col bg-white lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
-          <header className="flex items-center px-4">
+        <div className="relative isolate flex min-h-svh w-full flex-col bg-background">
+          <header className="flex items-center border-b border-navbar-line bg-navbar px-4">
             <div className="min-w-0 flex-1">
               <Navbar>
                 <NavbarItem href={routes.home.href()} aria-label="Velix home">
@@ -36,7 +36,7 @@ export function HomePage(handle: Handle<{ user: AuthUser | null; csrfToken: stri
             </div>
           </header>
           <main className="flex flex-1 flex-col pb-2 lg:px-2">
-            <div className="grow p-6 lg:rounded-lg lg:bg-white lg:p-10 lg:shadow-xs lg:ring-1 lg:ring-zinc-950/5 dark:lg:bg-zinc-900 dark:lg:ring-white/10">
+            <div className="grow p-6 lg:p-10">
               <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 py-24 text-center">
                 <img src="/favicon.svg" alt="" className="size-14" />
                 <Heading className="text-4xl/10! sm:text-5xl/12!">Velix</Heading>
@@ -46,10 +46,10 @@ export function HomePage(handle: Handle<{ user: AuthUser | null; csrfToken: stri
                 </Text>
                 <div className="flex gap-3">
                   {user ? (
-                    <Button href={routes.app.dashboard.href()}>Go to dashboard</Button>
+                    <Button color="blue" href={routes.app.dashboard.href()}>Go to dashboard</Button>
                   ) : (
                     <>
-                      <Button href={routes.auth.registerPage.href()}>Get started</Button>
+                      <Button color="blue" href={routes.auth.registerPage.href()}>Get started</Button>
                       <Button outline href={routes.auth.loginPage.href()}>
                         Sign in
                       </Button>

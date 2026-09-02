@@ -1,6 +1,6 @@
 # Velix — Agent Guide
 
-Remix **3.0.0-rc.1** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4.
+Remix **3.0.0-rc.1** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + velix-preline.
 
 ## Commands
 ```sh
@@ -25,8 +25,9 @@ Install with `bun install` (npm on this machine blocks packages younger than 7 d
 - Tests: `test/**/*.test.ts` using `test/helpers.ts` (`createTestApp`, `login`, `csrfFor`).
 
 ## UI components
-- All pages use `velix-catalyst/*` (Catalyst on Remix UI; private git dep pinned by commit, Tailwind
-  Plus license). Props accept `className`; form controls read ids from `<Field>` context.
+- All pages use `velix-preline/*` (Preline UI tokens on Remix UI; git dep pinned by commit, MIT).
+  `velix-catalyst/*` has the identical API for licensed teams. Props accept `className`; form
+  controls read ids from `<Field>` context. Style with semantic tokens (`bg-card`, `text-muted-foreground`), not raw palette classes.
 - Interactive Catalyst parts only hydrate inside a `clientEntry` island under a `public/` dir:
   `app/ui/public/app-shell.tsx` (StackedLayout + Navbar + account Dropdown + mobile drawer) and
   `app/actions/app/public/users-table.tsx` (Table + Checkbox + Alert confirm). Island props must be

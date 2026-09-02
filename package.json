@@ -26,7 +26,7 @@
   "dependencies": {
     "better-sqlite3": "12.8.0",
     "remix": "3.0.0-rc.1",
-    "velix-catalyst": "git+http://100.121.236.127:3000/rama/velix-catalyst.git#c62d7a91c12509fe6c77451d5c400598b8bb47f1"
+    "velix-preline": "git+ssh://git@github.com/qisthidev/velix-preline.git#98b41397b030e3790ab46f02f6d9d9403929f1fd"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",
