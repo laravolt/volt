@@ -25,7 +25,16 @@ export interface Db {
 
 export function openDatabase(filename: string): Db {
   if (filename !== ':memory:') {
-    fs.mkdirSync(path.dirname(path.resolve(filename)), { recursive: true })
+    let dir = path.dirname(path.resolve(filename))
+    try {
+      fs.mkdirSync(dir, { recursive: true })
+    } catch (error) {
+      throw new Error(
+        `Cannot create database directory "${dir}" for DATABASE_FILE="${filename}". ` +
+          'Check the DATABASE_FILE environment variable (default ./db/velix.sqlite).',
+        { cause: error },
+      )
+    }
   }
   let client = new BetterSqlite3(filename)
   client.pragma('journal_mode = WAL')
