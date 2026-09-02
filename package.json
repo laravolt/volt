@@ -1,0 +1,40 @@
+{
+  "name": "velix",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "High-performance full-stack TypeScript framework on Remix 3.0.0-rc.1, recreated from laravolt/laju.",
+  "scripts": {
+    "dev": "NODE_ENV=development node --watch --import remix/node-tsx server.ts",
+    "hmr": "NODE_ENV=development node hmr.ts",
+    "start": "NODE_ENV=production node --import remix/node-tsx server.ts",
+    "css": "tailwindcss -i ./app/styles/app.css -o ./public/app.css --minify",
+    "css:watch": "tailwindcss -i ./app/styles/app.css -o ./public/app.css --watch",
+    "predev": "npm run css",
+    "prestart": "npm run css",
+    "migrate": "node --import remix/node-tsx app/data/migrate.ts up",
+    "migrate:down": "node --import remix/node-tsx app/data/migrate.ts down",
+    "migrate:status": "node --import remix/node-tsx app/data/migrate.ts status",
+    "test": "remix test",
+    "typecheck": "tsc --noEmit",
+    "routes": "remix routes --table",
+    "doctor": "remix doctor"
+  },
+  "engines": {
+    "node": ">=24.3.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "12.8.0",
+    "remix": "3.0.0-rc.1",
+    "velix-catalyst": "git+http://100.121.236.127:3000/rama/velix-catalyst.git#c62d7a91c12509fe6c77451d5c400598b8bb47f1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@tailwindcss/cli": "4.2.2",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "25.5.0",
+    "playwright": "1.62.1",
+    "tailwindcss": "4.2.2",
+    "typescript": "6.0.2"
+  }
+}

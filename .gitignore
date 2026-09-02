@@ -1,0 +1,10 @@
+node_modules
+dist
+tmp/*
+!tmp/.gitkeep
+db/*.sqlite
+db/*.sqlite-*
+public/app.css
+.coverage
+.env
+.DS_Store
