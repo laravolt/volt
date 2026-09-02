@@ -2,11 +2,11 @@
  * Admin users table with bulk delete + confirmation (Table/Checkbox/Alert), hydrated island.
  */
 import { clientEntry, on, type Handle } from 'remix/ui'
-import { Alert, AlertActions, AlertDescription, AlertTitle } from 'velix-preline/alert'
-import { Badge } from 'velix-preline/badge'
-import { Button } from 'velix-preline/button'
-import { Checkbox } from 'velix-preline/checkbox'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'velix-preline/table'
+import { Alert, AlertActions, AlertDescription, AlertTitle } from 'volt-preline/alert'
+import { Badge } from 'volt-preline/badge'
+import { Button } from 'volt-preline/button'
+import { Checkbox } from 'volt-preline/checkbox'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'volt-preline/table'
 
 export type UsersTableUser = {
   id: string

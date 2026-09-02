@@ -14,7 +14,7 @@ describe('auth routes', () => {
   it('renders home and login pages', async () => {
     let home = await app.fetch(routes.home.href())
     assert.equal(home.status, 200)
-    assert.match(await home.text(), /Velix/)
+    assert.match(await home.text(), /Volt/)
     let loginPage = await app.fetch(routes.auth.loginPage.href())
     assert.equal(loginPage.status, 200)
     assert.match(await loginPage.text(), /name="_csrf"/)

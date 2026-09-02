@@ -25,7 +25,7 @@ server.listen(config.port, () => {
   if (process.env.REMIX_NODE_HMR) {
     import('remix/node-hmr/runtime').then((nodeHmr) => nodeHmr.emitServerReady())
   }
-  console.log(`Velix listening on http://localhost:${hmrProxyPort ?? config.port}`)
+  console.log(`Volt listening on http://localhost:${hmrProxyPort ?? config.port}`)
 })
 
 let shuttingDown = false

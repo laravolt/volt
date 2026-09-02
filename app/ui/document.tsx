@@ -1,6 +1,6 @@
 import type { Handle, RemixNode } from 'remix/ui'
 
-import { darkModeHeadScript } from 'velix-preline/dark-mode'
+import { darkModeHeadScript } from 'volt-preline/dark-mode'
 
 import { entryHref, entryPreloads } from '../assets.ts'
 
@@ -24,7 +24,7 @@ export function Document(handle: Handle<DocumentProps>) {
           <link rel="preconnect" href="https://rsms.me/" />
           <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
           <link rel="stylesheet" href="/app.css" />
-          <title>{title ? `${title} · Velix` : 'Velix'}</title>
+          <title>{title ? `${title} · Volt` : 'Volt'}</title>
           {head}
           {entryPreloads.map((href) => (
             <link key={href} rel="modulepreload" href={href} />

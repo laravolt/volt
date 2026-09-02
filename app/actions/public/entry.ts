@@ -1,5 +1,5 @@
 import { run } from 'remix/ui'
-import { installDarkMode } from 'velix-preline/dark-mode'
+import { installDarkMode } from 'volt-preline/dark-mode'
 
 installDarkMode()
 

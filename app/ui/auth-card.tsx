@@ -1,7 +1,7 @@
 /** Auth page: centered card with logo, heading and a form. */
 import type { Handle, RemixNode } from 'remix/ui'
-import { AuthLayout } from 'velix-preline/auth-layout'
-import { Heading } from 'velix-preline/heading'
+import { AuthLayout } from 'volt-preline/auth-layout'
+import { Heading } from 'volt-preline/heading'
 
 import { routes } from '../routes.ts'
 import { Document } from './document.tsx'
@@ -24,7 +24,7 @@ export function AuthCard(handle: Handle<AuthCardProps>) {
           <form method="post" action={action} className="grid w-full max-w-sm grid-cols-1 gap-8">
             <CsrfField token={csrfToken} />
             <a href={routes.home.href()} className="w-fit">
-              <img src="/favicon.svg" alt="Velix" className="size-10" />
+              <img src="/favicon.svg" alt="Volt" className="size-10" />
             </a>
             <Heading>{title}</Heading>
             {children}

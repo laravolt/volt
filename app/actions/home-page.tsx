@@ -1,8 +1,8 @@
 import type { Handle } from 'remix/ui'
-import { Button } from 'velix-preline/button'
-import { Heading } from 'velix-preline/heading'
-import { Navbar, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'velix-preline/navbar'
-import { Text } from 'velix-preline/text'
+import { Button } from 'volt-preline/button'
+import { Heading } from 'volt-preline/heading'
+import { Navbar, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'volt-preline/navbar'
+import { Text } from 'volt-preline/text'
 
 import { routes } from '../routes.ts'
 import type { AuthUser } from '../services/auth.service.ts'
@@ -17,9 +17,9 @@ export function HomePage(handle: Handle<{ user: AuthUser | null; csrfToken: stri
           <header className="flex items-center border-b border-navbar-line bg-navbar px-4">
             <div className="min-w-0 flex-1">
               <Navbar>
-                <NavbarItem href={routes.home.href()} aria-label="Velix home">
+                <NavbarItem href={routes.home.href()} aria-label="Volt home">
                   <img src="/favicon.svg" alt="" className="size-6" />
-                  <NavbarLabel>Velix</NavbarLabel>
+                  <NavbarLabel>Volt</NavbarLabel>
                 </NavbarItem>
                 <NavbarSpacer />
                 <NavbarSection>
@@ -39,7 +39,7 @@ export function HomePage(handle: Handle<{ user: AuthUser | null; csrfToken: stri
             <div className="grow p-6 lg:p-10">
               <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 py-24 text-center">
                 <img src="/favicon.svg" alt="" className="size-14" />
-                <Heading className="text-4xl/10! sm:text-5xl/12!">Velix</Heading>
+                <Heading className="text-4xl/10! sm:text-5xl/12!">Volt</Heading>
                 <Text className="text-lg/8!">
                   Full-stack TypeScript on Remix 3 with a strict Handler → Service → Repository → SQLite architecture,
                   DB-backed sessions and CSRF by default.

@@ -8,7 +8,7 @@ import { createSession, type Session, type SessionStorage } from 'remix/session'
 
 import type { SessionRepository } from '../repositories/session.repository.ts'
 
-export const SESSION_COOKIE = 'velix_session'
+export const SESSION_COOKIE = 'volt_session'
 export const SESSION_TTL_MS = 60 * 24 * 60 * 60 * 1000 // 60 days
 
 export function createSessionCookie(secret: string, secure: boolean) {

@@ -1,9 +1,9 @@
 /**
  * Small form helpers shared by pages: CSRF hidden field, flash/notice banner, error types.
- * Visual components come from `velix-preline`.
+ * Visual components come from `volt-preline`.
  */
 import type { Handle } from 'remix/ui'
-import { Text } from 'velix-preline/text'
+import { Text } from 'volt-preline/text'
 
 export type FieldErrors = Record<string, string>
 

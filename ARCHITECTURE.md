@@ -1,4 +1,4 @@
-# Velix Architecture
+# Volt Architecture
 
 ## Baseline decision
 Framework baseline is pinned to **Remix `3.0.0-rc.1`**:  
@@ -68,7 +68,7 @@ Request
 **Rules:**
 - Migration-driven schema changes only
 - One migration directory per table/concern: `db/migrations/<YYYYMMDDHHmmss>_<slug>/{up,down}.sql`
-- Run with `npm run migrate` (or `remix db migrate`); both share the `velix_migrations` journal
+- Run with `npm run migrate` (or `remix db migrate`); both share the `volt_migrations` journal
 
 ---
 
@@ -85,7 +85,7 @@ Request
 ## 4) Session and auth model
 
 - Session storage is DB-backed (`sessions` table) via `createDbSessionStorage()` in `app/middleware/session.ts`.
-- The signed `velix_session` cookie carries only the session id; payload lives in `sessions.data`.
+- The signed `volt_session` cookie carries only the session id; payload lives in `sessions.data`.
 - Auth context (`AuthUser`: id, name, email, avatar, is_admin, is_verified) is cached in the session
   payload under key `auth` and resolved by `remix/middleware/auth` with a session scheme that does
   **no** DB lookup. `sessions.user_id` mirrors it so all sessions of a user can be revoked.

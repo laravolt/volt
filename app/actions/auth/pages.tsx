@@ -1,8 +1,8 @@
 import type { Handle } from 'remix/ui'
-import { Button } from 'velix-preline/button'
-import { ErrorMessage, Field, Label } from 'velix-preline/fieldset'
-import { Input } from 'velix-preline/input'
-import { Strong, Text, TextLink } from 'velix-preline/text'
+import { Button } from 'volt-preline/button'
+import { ErrorMessage, Field, Label } from 'volt-preline/fieldset'
+import { Input } from 'volt-preline/input'
+import { Strong, Text, TextLink } from 'volt-preline/text'
 
 import { routes } from '../../routes.ts'
 import { AuthCard } from '../../ui/auth-card.tsx'

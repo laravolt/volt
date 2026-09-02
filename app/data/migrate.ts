@@ -13,7 +13,7 @@ import { createSqliteDatabase } from 'remix/data-table/sqlite'
 import type { Db } from './db.ts'
 
 export const MIGRATIONS_DIR = path.resolve(import.meta.dirname, '../../db/migrations')
-export const JOURNAL_TABLE = 'velix_migrations'
+export const JOURNAL_TABLE = 'volt_migrations'
 
 export async function migrate(db: Db, direction: 'up' | 'down' = 'up', step?: number) {
   let migrations = await loadMigrations(MIGRATIONS_DIR)

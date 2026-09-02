@@ -22,13 +22,13 @@ export const config = {
   port: process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 5555,
   appUrl: process.env.APP_URL ?? 'http://localhost:5555',
   sessionSecret,
-  databaseFile: process.env.DATABASE_FILE ?? './db/velix.sqlite',
+  databaseFile: process.env.DATABASE_FILE ?? './db/volt.sqlite',
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID ?? '',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
   },
   mail: {
     resendApiKey: process.env.RESEND_API_KEY ?? '',
-    from: process.env.MAIL_FROM ?? 'Velix <noreply@example.com>',
+    from: process.env.MAIL_FROM ?? 'Volt <noreply@example.com>',
   },
 } as const

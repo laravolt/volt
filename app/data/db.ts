@@ -31,7 +31,7 @@ export function openDatabase(filename: string): Db {
     } catch (error) {
       throw new Error(
         `Cannot create database directory "${dir}" for DATABASE_FILE="${filename}". ` +
-          'Check the DATABASE_FILE environment variable (default ./db/velix.sqlite).',
+          'Check the DATABASE_FILE environment variable (default ./db/volt.sqlite).',
         { cause: error },
       )
     }

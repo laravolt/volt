@@ -3,7 +3,7 @@
  * mobile navigation drawer work. Page content is passed as `children`.
  */
 import { clientEntry, on, type Handle, type RemixNode } from 'remix/ui'
-import { Avatar } from 'velix-preline/avatar'
+import { Avatar } from 'volt-preline/avatar'
 import {
   Dropdown,
   DropdownButton,
@@ -11,10 +11,10 @@ import {
   DropdownItem,
   DropdownLabel,
   DropdownMenu,
-} from 'velix-preline/dropdown'
-import { Navbar, NavbarDivider, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'velix-preline/navbar'
-import { Sidebar, SidebarBody, SidebarFooter, SidebarHeader, SidebarItem, SidebarLabel, SidebarSection } from 'velix-preline/sidebar'
-import { StackedLayout } from 'velix-preline/stacked-layout'
+} from 'volt-preline/dropdown'
+import { Navbar, NavbarDivider, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'volt-preline/navbar'
+import { Sidebar, SidebarBody, SidebarFooter, SidebarHeader, SidebarItem, SidebarLabel, SidebarSection } from 'volt-preline/sidebar'
+import { StackedLayout } from 'volt-preline/stacked-layout'
 
 import { routes } from '../../routes.ts'
 import { ArrowRightStartOnRectangleIcon, ChevronDownIcon, HomeIcon, UserIcon } from './icons.tsx'
@@ -33,7 +33,7 @@ export function toShellUser(user: { name: string | null; email: string; avatar: 
   return { name: user.name, email: user.email, avatar: user.avatar, is_admin: user.is_admin }
 }
 
-const LOGOUT_FORM_ID = 'velix-logout-form'
+const LOGOUT_FORM_ID = 'volt-logout-form'
 
 function initialsOf(name: string | null, email: string) {
   let source = (name && name.trim()) || email
@@ -67,9 +67,9 @@ export const AppShell = clientEntry<AppShellProps>(import.meta.url, function App
         <StackedLayout
           navbar={
             <Navbar>
-              <NavbarItem href={routes.home.href()} aria-label="Velix home">
+              <NavbarItem href={routes.home.href()} aria-label="Volt home">
                 <img src="/favicon.svg" alt="" className="size-6" />
-                <NavbarLabel>Velix</NavbarLabel>
+                <NavbarLabel>Volt</NavbarLabel>
               </NavbarItem>
               <NavbarDivider className="max-lg:hidden" />
               <NavbarSection className="max-lg:hidden">
@@ -110,7 +110,7 @@ export const AppShell = clientEntry<AppShellProps>(import.meta.url, function App
               <SidebarHeader>
                 <SidebarItem href={routes.home.href()}>
                   <img src="/favicon.svg" alt="" className="size-6" />
-                  <SidebarLabel>Velix</SidebarLabel>
+                  <SidebarLabel>Volt</SidebarLabel>
                 </SidebarItem>
               </SidebarHeader>
               <SidebarBody>

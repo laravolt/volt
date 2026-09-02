@@ -1,12 +1,12 @@
 /* Tailwind v4 source. Built to public/app.css by `npm run css`. */
 @import "tailwindcss";
-@import "velix-preline/styles.css";
+@import "volt-preline/styles.css";
 
 /* Remix UI emits css() rules under the `rmx` layer; declare order so Tailwind utilities win. */
 @layer rmx, base, components, utilities;
 
 @source "../";
-@source "../../node_modules/velix-preline/dist";
+@source "../../node_modules/volt-preline/dist";
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

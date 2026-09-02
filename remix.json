@@ -4,19 +4,19 @@
     "rootDir": ".",
     "basePath": "/assets",
     "allowFiles": ["app/routes.ts", "app/**/public/**"],
-    "allowPackages": ["remix", "velix-preline"],
+    "allowPackages": ["remix", "volt-preline"],
     "denyFiles": ["app/**/*.test.*"]
   },
   "db": {
     "adapter": {
       "type": "sqlite",
-      "filename": { "env": "DATABASE_FILE", "default": "./db/velix.sqlite" },
+      "filename": { "env": "DATABASE_FILE", "default": "./db/volt.sqlite" },
       "foreignKeys": true,
       "busyTimeout": 5000
     },
     "migrations": {
       "directory": "./db/migrations",
-      "journalTable": "velix_migrations"
+      "journalTable": "volt_migrations"
     }
   },
   "test": {
