@@ -93,8 +93,8 @@ bun install && npm run migrate && npm run start
 ```
 
 Set `BUILD_ID` per deploy for immutable fingerprinted asset URLs. Put a TLS proxy in front.
-Container: `docker build --ssh default --build-arg BUILD_ID=$(git rev-parse --short HEAD) -t volt .`
-(the SSH mount is needed while `volt-preline` is consumed from a private git remote).
+Container: `docker build --build-arg BUILD_ID=$(git rev-parse --short HEAD) -t volt .`
+
 
 > **npm note:** on machines with `minimum-release-age` in `~/.npmrc`, `remix@3.0.0-rc.1` may be
 > hidden from npm for a week after release; `bun install` is unaffected.
