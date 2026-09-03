@@ -15,6 +15,7 @@ Install with `bun install` (npm on this machine blocks packages younger than 7 d
 4. Every state-changing route goes through the global `csrf()`; pages render `<CsrfField>`.
 5. Session id rotates on login (`completeAuth(context)` then `setSessionUser`).
 6. Schema changes are SQL migrations in `db/migrations/<ts>_<slug>/`; never edit applied ones.
+7. Halaman error harus HTML; status apa pun dirender. Runtime client (`app/actions/public/entry.ts`) memakai custom `resolveFrame` yang meneruskan response ber-content-type `text/html` apa pun statusnya (401, 422, 429) agar UI pesan error dirender ke dalam frame.
 
 ## Where things go
 - New URL → `app/routes.ts` first, then the owning `app/actions/<area>/controller.tsx`.

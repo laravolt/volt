@@ -7,6 +7,7 @@ export interface RateLimitOptions {
   windowMs: number
   max: number
   name?: string
+  onLimited?: (context: any, retryAfterSec: number) => Response | Promise<Response>
 }
 
 interface Bucket {
@@ -27,7 +28,7 @@ function clientKey(headers: Headers): string {
 }
 
 export function rateLimit(options: RateLimitOptions): Middleware {
-  return (context, next) => {
+  return async (context, next) => {
     let now = Date.now()
     let key = `${options.name ?? context.url.pathname}:${clientKey(context.headers)}`
     let bucket = buckets.get(key)
@@ -38,6 +39,13 @@ export function rateLimit(options: RateLimitOptions): Middleware {
     bucket.count++
     if (bucket.count > options.max) {
       let retryAfter = Math.max(1, Math.ceil((bucket.resetAt - now) / 1000))
+      if (options.onLimited) {
+        let res = await options.onLimited(context, retryAfter)
+        if (!res.headers.has('Retry-After')) {
+          res.headers.set('Retry-After', String(retryAfter))
+        }
+        return res
+      }
       return new Response('Too Many Requests', {
         status: 429,
         headers: { 'Retry-After': String(retryAfter) },

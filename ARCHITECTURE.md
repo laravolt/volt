@@ -79,6 +79,7 @@ Request
 3. Auth middleware/helper should rely on session payload cache when sufficient (no unnecessary per-request `users` table fetch).  
 4. All state-changing routes must pass CSRF validation.  
 5. Session ID rotates on successful login.
+6. Error pages/responses must return HTML (`text/html`) so the custom `resolveFrame` renders the error state into the active frame regardless of HTTP status (401, 422, 429). Non-HTML errors trigger a visible user notice.
 
 ---
 

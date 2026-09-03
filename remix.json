@@ -20,7 +20,7 @@
     }
   },
   "test": {
-    "files": ["test/**/*.test.{ts,tsx}"],
+    "files": ["test/**/*.test.{ts,tsx}", "test/**/*.test.e2e.{ts,tsx}"],
     "exclude": ["node_modules/**", "tmp/**"],
     "type": ["server"]
   }

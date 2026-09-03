@@ -1,8 +1,12 @@
 import * as assert from 'remix/assert'
 import { afterEach, beforeEach, describe, it } from 'remix/test'
 
+import { resetRateLimits } from '../../app/middleware/rate-limit.ts'
+import { createAppRouter } from '../../app/router.ts'
 import { routes } from '../../app/routes.ts'
-import { createTestApp, csrfFor, form, login, seedUser, sessionCookie, startSession, type TestApp } from '../helpers.ts'
+import { createRepositories } from '../../app/services/index.ts'
+import { MemoryMailer } from '../../app/services/mailer.ts'
+import { BASE, createTestApp, createTestDb, csrfFor, form, login, seedUser, sessionCookie, startSession, type TestApp } from '../helpers.ts'
 
 describe('auth routes', () => {
   let app: TestApp
@@ -135,5 +139,51 @@ describe('auth routes', () => {
     let missing = await app.fetch(routes.password.resetPage.href({ token: 'nope' }))
     assert.equal(missing.status, 404)
     assert.equal((await login(app, user.email, 'brandnew1')).response.status, 303)
+  })
+
+  it('renders HTML page when rate limited (429)', async () => {
+    let db = await createTestDb()
+    let mailer = new MemoryMailer()
+    let router = createAppRouter({ db, mailer, rateLimits: true })
+    resetRateLimits()
+
+    let testApp: TestApp = {
+      db,
+      repos: createRepositories(db),
+      mailer,
+      router,
+      fetch(path, init = {}) {
+        let headers = new Headers(init.headers)
+        if (init.cookie) headers.set('Cookie', init.cookie)
+        return router.fetch(new Request(BASE + path, { ...init, headers }))
+      },
+      close() {
+        db.close()
+      },
+    }
+
+    try {
+      let { cookie, csrf } = await startSession(testApp)
+      let lastResponse: Response | undefined
+
+      // Login limit is 10
+      for (let i = 0; i < 11; i++) {
+        lastResponse = await testApp.fetch(routes.auth.login.href(), {
+          method: 'POST',
+          cookie,
+          headers: { 'X-Real-IP': '10.0.0.1' },
+          body: form({ _csrf: csrf, identifier: 'wrong@test.com', password: 'wrong' }),
+        })
+      }
+
+      assert.equal(lastResponse?.status, 429)
+      assert.ok(lastResponse?.headers.get('content-type')?.includes('text/html'))
+      assert.ok(lastResponse?.headers.has('Retry-After'))
+      let html = await lastResponse?.text()
+      assert.match(html, /Terlalu banyak percobaan/)
+    } finally {
+      testApp.close()
+      resetRateLimits()
+    }
   })
 })

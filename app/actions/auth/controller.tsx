@@ -37,9 +37,57 @@ const googleProvider = googleEnabled
 
 const WINDOW = 15 * 60 * 1000
 
+function formatRetryMinutes(retryAfterSec: number): string {
+  let minutes = Math.max(1, Math.ceil(retryAfterSec / 60))
+  return `Terlalu banyak percobaan, coba lagi dalam ${minutes} menit`
+}
+
 export default function authController(rateLimits: boolean) {
-  let loginLimit = rateLimits ? [rateLimit({ name: 'login', windowMs: WINDOW, max: 10 })] : []
-  let registerLimit = rateLimits ? [rateLimit({ name: 'register', windowMs: WINDOW, max: 5 })] : []
+  let loginLimit = rateLimits
+    ? [
+        rateLimit({
+          name: 'login',
+          windowMs: WINDOW,
+          max: 10,
+          onLimited(context, retryAfterSec) {
+            let csrfToken = getCsrfToken(context)
+            let rawForm = context.get(FormData)
+            let values = rawForm ? formValues(rawForm, ['identifier']) : {}
+            return context.render(
+              <LoginPage
+                csrfToken={csrfToken}
+                errors={{ _: formatRetryMinutes(retryAfterSec) }}
+                values={values}
+                googleEnabled={googleEnabled}
+              />,
+              { status: 429 },
+            )
+          },
+        }),
+      ]
+    : []
+  let registerLimit = rateLimits
+    ? [
+        rateLimit({
+          name: 'register',
+          windowMs: WINDOW,
+          max: 5,
+          onLimited(context, retryAfterSec) {
+            let csrfToken = getCsrfToken(context)
+            let rawForm = context.get(FormData)
+            let values = rawForm ? formValues(rawForm, ['name', 'email']) : {}
+            return context.render(
+              <RegisterPage
+                csrfToken={csrfToken}
+                errors={{ _: formatRetryMinutes(retryAfterSec) }}
+                values={values}
+              />,
+              { status: 429 },
+            )
+          },
+        }),
+      ]
+    : []
 
   return createController(routes.auth, {
     actions: {
