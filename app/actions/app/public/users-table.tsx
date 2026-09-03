@@ -80,7 +80,7 @@ export const UsersTable = clientEntry<UsersTableProps>(
         >
           <input type="hidden" name="_csrf" value={csrfToken} />
           <input type="hidden" name="_method" value="DELETE" />
-          <Table className="[--gutter:--spacing(6)] sm:[--gutter:--spacing(8)]">
+          <Table responsive="stack" className="[--gutter:--spacing(6)] sm:[--gutter:--spacing(8)]">
             <TableHead>
               <TableRow>
                 <TableHeader className="w-8">
@@ -95,17 +95,21 @@ export const UsersTable = clientEntry<UsersTableProps>(
             <TableBody>
               {users.map((u) => (
                 <TableRow key={u.id}>
-                  <TableCell>
+                  <TableCell stackedLabel="Select">
                     {u.id === currentUserId ? null : (
                       <Checkbox name="ids" value={u.id} aria-label={`Select ${u.email}`} />
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">{u.name ?? '—'}</TableCell>
-                  <TableCell className="text-muted-foreground">{u.email}</TableCell>
-                  <TableCell>
+                  <TableCell stackedLabel="Name" className="font-medium">
+                    {u.name ?? '—'}
+                  </TableCell>
+                  <TableCell stackedLabel="Email" className="text-muted-foreground">
+                    {u.email}
+                  </TableCell>
+                  <TableCell stackedLabel="Role">
                     <Badge color={u.is_admin ? 'lime' : 'zinc'}>{u.is_admin ? 'admin' : 'user'}</Badge>
                   </TableCell>
-                  <TableCell className="text-right text-muted-foreground tabular-nums">
+                  <TableCell stackedLabel="Joined" className="text-right text-muted-foreground tabular-nums">
                     {formatDateIndo(u.created_at)}
                   </TableCell>
                 </TableRow>
