@@ -1,63 +1,133 @@
-# Panduan Standar UX Volt (Volt UX Guidelines)
+# Panduan UX Volt
 
-Panduan standar User Experience (UX) untuk starter template **Volt** (`laravolt/volt`), disusun berdasarkan hasil temuan nyata dan penyempurnaan pada sesi User Acceptance Testing (UAT) proyek *brain-v2.1* (khususnya *Product Frontend* dan *Helpdesk Frontend* client per 31 Agustus – 2 September 2026).
+Panduan ini menetapkan default UX untuk starter Volt. Aturan aksesibilitas dan
+usabilitas dirangkum dari NotebookLM **Volt UX Foundations**; keputusan lokal
+seperti batas jumlah opsi dibuat eksplisit sebagai konvensi, bukan hukum universal.
+Implementasi ringkas tersedia di `.claude/skills/volt-ux/`.
 
----
+## Sumber utama
 
-## Ringkasan 16 Aturan UX Baku
+- Adam Silver, *Form Design Patterns*
+- Adam Wathan & Steve Schoger, *Refactoring UI*
+- Heydon Pickering, *Inclusive Design Patterns*
+- Manuel Matuzović, *Web Accessibility Cookbook*
+- WAI-ARIA Authoring Practices Guide (APG)
+- GOV.UK Design System dan U.S. Web Design System (USWDS)
+- Nielsen Norman Group (NN/g), LukeW, dan Pencil & Paper
 
-| # | Aturan UX | Ringkasan Pola | Bukti & Referensi Proyek |
-|---|---|---|---|
-| 1 | **Tata Letak Baris Aksi Form (Action Row Pattern)** | Aksi primer di **paling kanan**, aksi sekunder/batal/destruktif di kiri dengan pembatas `border-t`. Tombol "Batal" adalah button sekunder, bukan teks link biasa. | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §3 (tabel baris 12), commit `af497f4`. |
-| 2 | **Loading State & Anti Double-Submit** | Tombol submit wajib terkunci (`disabled`) dan menampilkan status proses ("Menyimpan...", "Mengirim...") saat form dikirim untuk mencegah duplicate submission. Form diberi `aria-busy="true"`. | `brain-v2.1: wiki/moduzen/livewire-ux-engineering-playbook.md` §5.1, `wiki/memory/livewire-ux-template-standard.md`, `wiki/deliverables/2026-09-02-panduan-uat-helpdesk.md` skenario H5. |
-| 3 | **Konfirmasi Aksi Destruktif Eksplisit** | Aksi merusak/menghapus wajib melalui dialog konfirmasi (`Alert`) yang menyebutkan secara spesifik entitas dan jumlah yang dihapus, bukan tombol hapus terbuka di setiap baris tabel. | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §5 (tabel baris 14), `wiki/moduzen/livewire-ux-engineering-playbook.md` §14.2. |
-| 4 | **Sistem Notifikasi & Feedback Konsisten (Notice & Toast)** | Menyediakan pesan status visual yang seragam: `success` (hijau), `error` (merah), `warning` (amber), `info` (biru) dengan dukungan `aria-live="polite"` dan auto-dismiss / close manual. | `brain-v2.1: wiki/moduzen/livewire-ux-engineering-playbook.md` §14.2, `wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §20. |
-| 5 | **Penanda Field Wajib & Legenda Tunggal** | Field wajib ditandai bintang merah (`*`), tetapi keterangan `* wajib diisi` cukup dicantumkan **satu kali** di atas form (abu-abu kecil), bukan diulang pada setiap kartu/seksi. | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §4 (baris 13) & §20, `wiki/deliverables/2026-09-01-before-after-uat-new-item.md` baris 67. |
-| 6 | **Fokus Otomatis ke Field Pertama yang Error** | Saat validasi form gagal, fokus kursor otomatis diarahkan ke input pertama yang tidak valid agar pengguna tidak perlu mencari letak kesalahan secara manual. | `brain-v2.1: wiki/lessons/important-style-beats-validation-class.md`, `wiki/deliverables/2026-09-02-panduan-uat-helpdesk.md` skenario H3. |
-| 7 | **Prioritas Border Merah Saat Field Error Fokus** | Border merah invalid harus tetap terlihat jelas saat field yang bersangkutan sedang difokuskan, tidak boleh tertimpa oleh styling ring fokus default. | `brain-v2.1: wiki/lessons/important-style-beats-validation-class.md` (pelajaran `!important`), commit `d072392`. |
-| 8 | **Pesan Error yang Solutif dan Actionable** | Pesan validasi diletakkan tepat di bawah field yang bermasalah dan menjelaskan aturan/cara memperbaiki nilai (mis. "Minimal 6 karakter", "Gunakan format email@domain.com"). | `brain-v2.1: wiki/deliverables/2026-09-02-panduan-uat-helpdesk.md` skenario H3, `wiki/moduzen/livewire-ux-engineering-playbook.md` §4. |
-| 9 | **Pilihan Singkat vs Panjang (Radio ≤5 vs Select >5)** | Opsi berjumlah ≤5 ditampilkan sebagai radio button atau chip agar langsung terlihat tanpa klik; opsi >5 menggunakan dropdown dengan pencarian (searchable select). | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §6 (baris 15) & §20, `wiki/deliverables/2026-09-01-before-after-uat-new-item.md` baris 51 & 66. |
-| 10 | **Hierarki & Segmentasi Form (Fieldset & Sections)** | Form panjang dikelompokkan ke dalam `<fieldset>` per seksi dengan `<legend>` yang jelas dan grid multi-kolom proporsional agar tidak melelahkan pengguna (*form fatigue*). | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §4 (baris 13), `wiki/deliverables/2026-09-02-laporan-perbaikan-uat-new-item.md` §2. |
-| 11 | **Format Mata Uang Rupiah Standar (id-ID Currency)** | Format nominal rupiah menggunakan prefiks `Rp ` dengan pemisah ribuan titik (`.`) tanpa desimal sen jika bulat (contoh: `Rp 14.000` atau `-Rp 14.000`). | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §18, `wiki/deliverables/2026-08-28-notulen-uat-new-item.md`. |
-| 12 | **Format Tanggal & Waktu Lokal Indonesia** | Tanggal disajikan dalam format bahasa Indonesia yang mudah dipahami (`D MMMM YYYY`, misal `2 September 2026`) dan waktu 24 jam (`HH:mm WIB`). | `brain-v2.1: wiki/deliverables/2026-09-02-panduan-uat-helpdesk.md` skenario H6 & H29, `wiki/deliverables/2026-09-01-before-after-uat-new-item.md`. |
-| 13 | **Keadaan Kosong Informatif (Standardized EmptyState)** | Daftar atau tabel tanpa data menampilkan komponen `EmptyState` lengkap dengan ikon, judul deskriptif, penjelasan sebab kosong, dan tombol aksi pemulihan. | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §20, `wiki/moduzen/livewire-ux-engineering-playbook.md` §14.2. |
-| 14 | **Kamus Istilah Antarmuka Baku Bahasa Indonesia** | Penggunaan label UI konsisten: *Baru*, *Dikerjakan*, *Selesai*, *Batal*, *Simpan*, *Belum ditugaskan* (bukan *Unassigned*). Istilah teknis universal (CSV, API) tetap dipertahankan. | `brain-v2.1: wiki/deliverables/2026-09-02-panduan-uat-helpdesk.md` §Kamus label final, commit `971c0fd`. |
-| 15 | **Umpan Balik Koneksi Terputus (Offline Feedback)** | Sistem mendeteksi hilangnya koneksi jaringan, menampilkan indikator offline, dan mengunci tombol aksi tulis agar data tidak hilang secara tak terduga. | `brain-v2.1: wiki/moduzen/livewire-ux-engineering-playbook.md` §6, `wiki/memory/livewire-ux-template-standard.md`. |
-| 16 | **Penyelarasan Lebar Konten Form Responsif** | Halaman form input menggunakan kontainer terpusat yang proporsional (`max-w-4xl` s/d `max-w-5xl`) agar judul, header, dan form sejajar serta tidak terentang berlebihan di layar lebar. | `brain-v2.1: wiki/deliverables/2026-09-02-kit-pola-ui-product.md` §2.A (baris 33-36). |
+Audit NotebookLM disimpan sebagai note `volt-ux/01-choice-controls` sampai
+`volt-ux/11-visual-hierarchy` agar keputusan dapat ditelusuri.
 
----
+## 16 aturan
 
-## Rincian Panduan & Implementasi Komponen di Volt
+| # | Aturan | Default Volt | Dasar singkat |
+| --- | --- | --- | --- |
+| 1 | Hierarki aksi | Satu aksi primer jelas; aksi sekunder lebih tenang; urutan DOM sama dengan urutan visual. | Form Design Patterns; Web Accessibility Cookbook |
+| 2 | Pending dan anti double-submit | Submit aktif saat awal, lalu terkunci hanya setelah submit valid; tangani event form agar Enter ikut terlindungi; tandai form sibuk. | Form Design Patterns; Smashing disabled buttons |
+| 3 | Aksi destruktif | Utamakan Undo bila aman; untuk aksi serius/irreversibel, dialog menyebut aksi, entitas, jumlah, dan akibat. | NN/g Confirmation Dialogs; APG Dialog |
+| 4 | Kanal feedback | Field error untuk koreksi field; Notice untuk konteks halaman; indicator untuk status melekat; Toast hanya untuk status pasif sekunder. | NN/g feedback taxonomy; APG Alert |
+| 5 | Field wajib | Gunakan `required`, penanda visual, dan satu legenda `* wajib diisi` dekat awal form. | Inclusive Design Patterns; Web Accessibility Cookbook |
+| 6 | Fokus setelah error | Satu error dapat fokus ke field; beberapa error fokus ke summary yang menaut ke setiap field. | GOV.UK Error Summary; Form Design Patterns |
+| 7 | State error terlihat | Error tetap terbaca saat fokus dan tidak mengandalkan warna saja. | Form Design Patterns; Web Accessibility Cookbook |
+| 8 | Pesan error solutif | Pesan berada dekat field, menyebut masalah, dan memberi cara memperbaiki tanpa jargon atau menyalahkan. | GOV.UK Error Message; NN/g form errors |
+| 9 | Pilihan pendek/panjang | **Konvensi Volt:** 2–5 opsi tunggal memakai radio; >5 memakai combobox dengan pencarian. Batas lain dapat dipilih bila riset pengguna memberi alasan. | NN/g radios; USWDS; LukeW |
+| 10 | Segmentasi form | `fieldset`/`legend` hanya untuk grup kontrol yang butuh konteks bersama; seksi input biasa memakai heading. | Form Design Patterns; Inclusive Design Patterns |
+| 11 | Format Rupiah | Tampilkan `Rp 14.000` untuk nominal bulat; gunakan helper lokal dan uji nilai negatif/besar. | Konvensi locale `id-ID` |
+| 12 | Format tanggal/waktu | Gunakan format Indonesia yang jelas dan zona waktu eksplisit; jangan memberi label zona yang berbeda dari konversi aktual. | Konvensi locale `id-ID` |
+| 13 | Empty dan error state | Bedakan first-use, no-data, no-results, permission, dan load failure; jelaskan sebab dan beri pemulihan yang benar. | NN/g Empty States |
+| 14 | Copywriting Indonesia | Gunakan istilah ringkas, aktif, spesifik, konsisten, dan action-oriented; istilah teknis universal boleh dipertahankan. | GOV.UK content/error guidance |
+| 15 | Koneksi terputus | Jelaskan bahwa pengiriman tertunda, pertahankan input, dan sediakan retry; jangan sekadar mengunci kontrol tanpa jalan keluar. | Smashing disabled buttons; Web Accessibility Cookbook |
+| 16 | Hierarki visual responsif | Gunakan type/spacing scale dan token semantik; lebih banyak ruang antargrup daripada di dalam grup; batasi lebar baca. | Refactoring UI |
 
-### 1. Pola Baris Aksi Form (Action Row Pattern)
-Tombol form tidak boleh diletakkan sembarangan di sisi kiri atau tercampur tanpa hierarki:
-- Gunakan `<ActionRow>` di bawah form: `border-t border-card-line pt-4 flex items-center justify-between gap-3`.
-- Aksi sekunder (misal tombol `Batal` bertipe `variant="secondary"`) berada di sisi kiri.
-- Aksi primer (misal `SubmitButton` atau tombol `Simpan`) berada di sisi paling kanan.
+## Keputusan komponen
 
-### 2. Tombol Submit dengan State Pending (SubmitButton)
-Saat pengguna menekan tombol kirim:
-- Tombol otomatis menampilkan indikator spinner pemrosesan dan mengubah label menjadi kata kerja progresif (misal: "Menyimpan...", "Mengirim...").
-- Atribut `disabled` diaktifkan agar klik berulang tidak mengirim request berkali-kali ke server.
-- Form/kontainer induk diberi `aria-busy="true"` untuk aksesibilitas.
+| Situasi | Gunakan |
+| --- | --- |
+| Satu pilihan, 2–5 opsi | `RadioGroup`, `RadioField`, `Radio`, `Fieldset`, `Legend` |
+| Satu pilihan, >5 opsi | Typed searchable `Combobox` |
+| Beberapa pilihan kecil | `CheckboxGroup`, `CheckboxField`, `Checkbox` |
+| Boolean yang disimpan saat submit | Standalone `Checkbox` |
+| Boolean yang berlaku segera | `Switch` |
+| Tanggal/waktu | Native `Input` dengan tipe date/time yang sesuai |
+| Submit form | Project `SubmitButton` atau handler submit milik form |
+| Destructive standalone | Project `ConfirmDialog`; di dalam island yang sudah ada, compose `Alert` biasa |
+| Feedback inline | Project `Notice` |
+| Feedback pasif sekunder | Project `Toast` |
+| Empty/error state | Project `EmptyState`; `volt-pro/empty-state` bila paket tersedia |
+| Tabel | `volt-preline/table`; helper `volt-pro` bila paket tersedia |
 
-### 3. Konfirmasi Aksi Destruktif (Destructive Confirmation Dialog)
-Jangan menempatkan tombol aksi destruktif (hapus permanen) secara langsung tanpa pelindung:
-- Gunakan modal/alert konfirmasi yang jelas: judul pertanyaan eksplisit (misal: "Hapus 3 pengguna?"), deskripsi risiko ("Tindakan ini permanen dan tidak dapat dibatalkan"), serta dua tombol aksi: `Batal` (warna netral) dan `Hapus` (warna merah / destructive).
+`Notice`, `Toast`, `SubmitButton`, `ConfirmDialog`, `EmptyState`, dan
+`AutoFocusError` adalah helper project, bukan export `volt-preline`.
+`volt-preline/button` menerima tepat satu gaya: `color`, `outline`, atau `plain`;
+tidak ada prop `variant`.
 
-### 4. Notifikasi dan Flash Message (Notice / Toast)
-Gunakan komponen `Notice` untuk pesan dalam halaman dan `Toast` untuk notifikasi melayang:
-- Mendukung varian: `success`, `error`, `warning`, `info`.
-- Menyediakan `role="alert"` atau `role="status"` dengan `aria-live="polite"`.
-- Opsi tombol dismiss (tutup) dan auto-dismiss setelah beberapa detik.
+## Form dan validasi
 
-### 5. Format Angka Rupiah dan Tanggal Indonesia
-Hindari format mentah mata uang dan tanggal bahasa Inggris:
-- Gunakan helper `formatRupiah(amount)` -> `Rp 14.000` (angka bulat tanpa desimal sen).
-- Gunakan helper `formatDateIndo(date)` -> `2 September 2026` dan `formatDateTimeIndo(date)` -> `2 September 2026, 14:30 WIB`.
+1. Setiap kontrol memiliki label visual yang terkait secara programatik.
+2. Placeholder bukan label; gunakan hanya sebagai contoh opsional yang pendek.
+3. Petunjuk penting tetap terlihat dan terhubung melalui `aria-describedby`.
+4. Nilai yang sudah benar dipertahankan setelah validasi atau kegagalan sistem.
+5. Field invalid menggunakan state programatik dan pesan inline yang spesifik.
+6. Error summary memuat tautan dengan teks yang sama seperti error inline.
+7. Jangan memakai `fieldset` hanya untuk styling atau section card.
+8. Submit tidak dinonaktifkan sejak awal tanpa alasan dan penjelasan.
+9. Pending dimulai dari jalur `submit`, bukan hanya click tombol.
 
-### 6. Fokus Otomatis pada Field Pertama yang Error (Auto-focus First Error)
-Pada saat form gagal divalidasi oleh server atau klien:
-- Halaman mendeteksi elemen input pertama yang memiliki pesan error atau `aria-invalid="true"`.
-- Kursor/fokus otomatis digeser ke elemen tersebut dengan `input.focus()`.
-- Warna border merah tetap terjaga di CSS agar pengguna langsung mengenali letak koreksi yang diperlukan.
+## Dialog destruktif
+
+- Gunakan dialog hanya untuk tindakan dengan konsekuensi serius atau tidak mudah dipulihkan.
+- Judul: `Hapus 12 data?`, bukan `Apakah Anda yakin?`.
+- Deskripsi menjelaskan apa yang hilang dan apakah tindakan dapat dibatalkan.
+- Tombol aman dan tombol destruktif memakai label konsekuensi yang jelas.
+- Fokus masuk ke dialog, tetap di dalamnya, Escape menutup, dan fokus kembali ke pemicu.
+- Fokus awal aksi destruktif berada pada target yang aman.
+- Konfirmasi dengan mengetik kata hanya untuk tindakan yang sangat berbahaya dan jarang.
+
+## Feedback
+
+- `role="status"`/polite untuk pembaruan rutin dan hasil non-kritis.
+- `role="alert"`/assertive hanya untuk informasi mendesak atau sensitif waktu.
+- Alert tidak mengambil fokus; gunakan dialog bila interupsi benar-benar diperlukan.
+- Error, warning penting, dan pesan yang membutuhkan tindakan tidak auto-dismiss.
+- Success/info pasif boleh auto-dismiss setelah waktu baca yang layak dan tetap memiliki tombol tutup.
+
+## Tabel, filter, dan daftar
+
+- Beri nama/caption yang aksesibel dan header asli.
+- Teks rata kiri; angka, uang, dan nilai yang dibandingkan rata kanan.
+- Aksi berulang memiliki accessible name yang menyebut record.
+- Bulk toolbar muncul setelah pilihan dan mengumumkan jumlah terpilih.
+- Destructive bulk action mengonfirmasi jumlah dan akibat.
+- Filter aktif terlihat dan memiliki aksi Atur ulang.
+- Sort memakai button dan `aria-sort`; pagination memakai nav berlabel dan current state.
+- Perubahan hasil dinamis diumumkan melalui status tanpa mencuri fokus dari input filter.
+- Loading memakai indikator/`aria-busy`; empty state baru muncul setelah loading selesai.
+- Tabel lebar berada dalam region scroll horizontal yang dapat difokuskan dan memiliki nama.
+
+## Empty dan error state
+
+- **First use/no data:** jelaskan fungsi area dan beri aksi mulai bila tersedia.
+- **No results:** sebutkan filter/kata kunci dan beri aksi atur ulang, bukan CTA membuat data.
+- **Permission:** jelaskan keterbatasan dan jalur meminta akses bila ada.
+- **Load failure:** beri pesan netral, retry/help, dan pertahankan pekerjaan pengguna.
+- Jangan pernah menampilkan `Data kosong` ketika sistem masih memuat.
+
+## Remix island
+
+- Server-render dahulu; hydrate hanya interaksi yang membutuhkan state browser.
+- Source island berada di `app/**/public/**`; props berupa data serializable dan memakai `type` alias.
+- Independent sibling islands diperbolehkan.
+- Jangan melewatkan page content, event mixin, atau island lain sebagai children/props serializable dari `clientEntry`.
+- Island tabel/page yang sudah aktif harus memiliki state `Alert`, `Combobox`, atau kontrol interaktif turunannya sendiri; jangan menumpuk client entry.
+- Jangan mengirim `checked`, `value`, atau `open` sebagai `undefined`.
+
+## Contoh tombol yang valid
+
+```tsx
+<Button color="blue" type="submit">Simpan</Button>
+<Button outline type="button">Batal</Button>
+<Button plain href={backHref}>Kembali</Button>
+```
+
+Lihat `.claude/skills/volt-ux/references/components.md` untuk recipe lengkap dan
+`.claude/skills/volt-ux/references/copywriting-id.md` untuk pola pesan.

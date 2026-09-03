@@ -1,8 +1,7 @@
 /**
- * Submit button with automatic pending state and double-submit prevention.
- * Implements UAT Rule #2 (whole-form lock & button pending state).
+ * Submit button with pending state and form-level double-submit prevention.
  */
-import { clientEntry, on, type Handle } from 'remix/ui'
+import { clientEntry, ref, type Handle } from 'remix/ui'
 import { Button, type ButtonColor } from 'volt-preline/button'
 
 export type SubmitButtonProps = {
@@ -16,19 +15,8 @@ export type SubmitButtonProps = {
 
 function SpinnerIcon() {
   return (
-    <svg
-      className="size-4 animate-spin text-current"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
+    <svg className="size-4 animate-spin text-current" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path
         className="opacity-75"
         fill="currentColor"
@@ -42,7 +30,28 @@ export const SubmitButton = clientEntry<SubmitButtonProps>(
   import.meta.url,
   function SubmitButton(handle: Handle<SubmitButtonProps>) {
     let pending = false
-    let formEl: HTMLFormElement | null = null
+
+    let bindForm = ref((node, signal) => {
+      if (!(node instanceof HTMLButtonElement)) return
+      let form = node.form
+      if (!form) return
+
+      form.addEventListener(
+        'submit',
+        (event) => {
+          if (pending) {
+            event.preventDefault()
+            return
+          }
+          if (!form.checkValidity()) return
+
+          pending = true
+          form.setAttribute('aria-busy', 'true')
+          handle.update()
+        },
+        { signal },
+      )
+    })
 
     return () => {
       let {
@@ -54,37 +63,42 @@ export const SubmitButton = clientEntry<SubmitButtonProps>(
         disabled = false,
       } = handle.props
 
+      let content = pending ? (
+        <span className="inline-flex items-center gap-2" role="status">
+          {SpinnerIcon()}
+          <span>{pendingText}</span>
+        </span>
+      ) : (
+        label
+      )
+
+      let common = {
+        type: 'submit' as const,
+        disabled: disabled || pending,
+        'aria-busy': pending ? 'true' : 'false',
+        className,
+        mix: bindForm,
+      }
+
+      if (variant === 'ghost') {
+        return (
+          <Button {...common} plain>
+            {content}
+          </Button>
+        )
+      }
+
+      if (variant === 'outline' || variant === 'secondary') {
+        return (
+          <Button {...common} outline>
+            {content}
+          </Button>
+        )
+      }
+
       return (
-        <Button
-          type="submit"
-          color={color}
-          variant={variant}
-          disabled={disabled || pending}
-          aria-busy={pending ? 'true' : 'false'}
-          className={className}
-          mix={on<HTMLButtonElement, 'click'>('click', (e) => {
-            let btn = e.currentTarget
-            formEl = btn.closest('form')
-            if (!formEl) return
-
-            // Check form validity before locking
-            if (formEl.checkValidity && !formEl.checkValidity()) {
-              return
-            }
-
-            pending = true
-            formEl.setAttribute('aria-busy', 'true')
-            handle.update()
-          })}
-        >
-          {pending ? (
-            <span className="inline-flex items-center gap-2" role="status" aria-live="polite">
-              {SpinnerIcon()}
-              <span>{pendingText}</span>
-            </span>
-          ) : (
-            label
-          )}
+        <Button {...common} color={color}>
+          {content}
         </Button>
       )
     }

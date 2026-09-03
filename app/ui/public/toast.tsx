@@ -32,15 +32,17 @@ export const Toast = clientEntry<ToastProps>(import.meta.url, function Toast(han
     handle.update()
   }
 
-  // Set up auto-dismiss timers on browser only
+  // Only passive secondary feedback may auto-dismiss. Errors and warnings persist.
   if (typeof window !== 'undefined') {
     for (let t of activeToasts) {
-      if (!timers[t.id]) {
-        let duration = t.durationMs ?? 5000
-        timers[t.id] = setTimeout(() => {
-          dismiss(t.id)
-        }, duration)
-      }
+      let variant = t.variant ?? 'info'
+      if (variant === 'error' || variant === 'warning' || timers[t.id]) continue
+
+      let duration = t.durationMs ?? 6000
+      if (duration <= 0) continue
+      timers[t.id] = setTimeout(() => {
+        dismiss(t.id)
+      }, duration)
     }
   }
 
