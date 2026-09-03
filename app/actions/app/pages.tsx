@@ -10,16 +10,43 @@ import { routes } from '../../routes.ts'
 import type { AuthUser } from '../../services/auth.service.ts'
 import type { PublicUser } from '../../services/user.service.ts'
 import { Document } from '../../ui/document.tsx'
-import { type FieldErrors, type FlashMessages, Notice } from '../../ui/form.tsx'
+import {
+  ActionRow,
+  type FieldErrors,
+  type FlashMessages,
+  Notice,
+  RequiredLegend,
+} from '../../ui/form.tsx'
 import { AppShell, toShellUser } from '../../ui/public/app-shell.tsx'
+import { AutoFocusError } from '../../ui/public/auto-focus-error.tsx'
+import { SubmitButton } from '../../ui/public/submit-button.tsx'
+import { Toast, type ToastItem } from '../../ui/public/toast.tsx'
 import { UsersTable } from './public/users-table.tsx'
 
-export function DashboardPage(handle: Handle<{ user: AuthUser; csrfToken: string; flash?: FlashMessages; users?: PublicUser[]; errors?: FieldErrors }>) {
+export function DashboardPage(
+  handle: Handle<{
+    user: AuthUser
+    csrfToken: string
+    flash?: FlashMessages
+    users?: PublicUser[]
+    errors?: FieldErrors
+  }>,
+) {
   return () => {
     let { user, csrfToken, flash, users, errors = {} } = handle.props
+
+    let toasts: ToastItem[] = []
+    if (flash?.success) {
+      toasts.push({ id: 'flash-success', variant: 'success', message: flash.success })
+    }
+    if (flash?.error) {
+      toasts.push({ id: 'flash-error', variant: 'error', message: flash.error })
+    }
+
     return (
       <Document title="Dashboard">
         <AppShell user={toShellUser(user)} csrfToken={csrfToken} currentPath={routes.app.dashboard.href()}>
+          {toasts.length > 0 && <Toast toasts={toasts} />}
           <Heading>Welcome, {user.name || user.email}</Heading>
           <Text className="mt-2">You are signed in{user.is_admin ? ' as an administrator' : ''}.</Text>
           <div className="mt-6">
@@ -33,7 +60,19 @@ export function DashboardPage(handle: Handle<{ user: AuthUser; csrfToken: string
                 <Text className="text-sm/6!">{users.length} total</Text>
               </div>
               <div className="mt-4">
-                <UsersTable users={users.map((u) => ({ id: u.id, name: u.name, email: u.email, is_admin: u.is_admin, is_verified: u.is_verified, created_at: u.created_at }))} currentUserId={user.id} action={routes.app.deleteUsers.href()} csrfToken={csrfToken} />
+                <UsersTable
+                  users={users.map((u) => ({
+                    id: u.id,
+                    name: u.name,
+                    email: u.email,
+                    is_admin: u.is_admin,
+                    is_verified: u.is_verified,
+                    created_at: u.created_at,
+                  }))}
+                  currentUserId={user.id}
+                  action={routes.app.deleteUsers.href()}
+                  csrfToken={csrfToken}
+                />
               </div>
             </>
           ) : null}
@@ -43,12 +82,43 @@ export function DashboardPage(handle: Handle<{ user: AuthUser; csrfToken: string
   }
 }
 
-export function ProfilePage(handle: Handle<{ user: AuthUser; profile: PublicUser; csrfToken: string; flash?: FlashMessages; profileErrors?: FieldErrors; passwordErrors?: FieldErrors; values?: Record<string, string> }>) {
+export function ProfilePage(
+  handle: Handle<{
+    user: AuthUser
+    profile: PublicUser
+    csrfToken: string
+    flash?: FlashMessages
+    profileErrors?: FieldErrors
+    passwordErrors?: FieldErrors
+    values?: Record<string, string>
+  }>,
+) {
   return () => {
-    let { user, profile, csrfToken, flash, profileErrors = {}, passwordErrors = {}, values = {} } = handle.props
+    let {
+      user,
+      profile,
+      csrfToken,
+      flash,
+      profileErrors = {},
+      passwordErrors = {},
+      values = {},
+    } = handle.props
+
+    let toasts: ToastItem[] = []
+    if (flash?.success) {
+      toasts.push({ id: 'flash-profile-success', variant: 'success', message: flash.success })
+    }
+    if (flash?.error) {
+      toasts.push({ id: 'flash-profile-error', variant: 'error', message: flash.error })
+    }
+
+    let hasProfileErrors = Object.keys(profileErrors).length > 0
+    let hasPasswordErrors = Object.keys(passwordErrors).length > 0
+
     return (
       <Document title="Profile">
         <AppShell user={toShellUser(user)} csrfToken={csrfToken} currentPath={routes.app.profile.href()}>
+          {toasts.length > 0 && <Toast toasts={toasts} />}
           <Heading>Profile</Heading>
           <div className="mt-6">
             <Notice flash={flash} />
@@ -56,8 +126,10 @@ export function ProfilePage(handle: Handle<{ user: AuthUser; profile: PublicUser
 
           <form method="post" action={routes.app.changeProfile.href()} className="mx-auto max-w-4xl">
             <input type="hidden" name="_csrf" value={csrfToken} />
+            {hasProfileErrors && <AutoFocusError />}
             <Divider className="my-10 mt-6" />
             <Notice error={profileErrors._} />
+            <RequiredLegend />
             <Fieldset>
               <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
                 <div className="space-y-1">
@@ -66,35 +138,58 @@ export function ProfilePage(handle: Handle<{ user: AuthUser; profile: PublicUser
                 </div>
                 <div className="space-y-6">
                   <Field>
-                    <Label>Name</Label>
-                    <Input name="name" value={values.name ?? profile.name ?? ''} required invalid={Boolean(profileErrors.name)} />
+                    <Label>
+                      Name <span className="text-destructive font-bold">*</span>
+                    </Label>
+                    <Input
+                      name="name"
+                      value={values.name ?? profile.name ?? ''}
+                      required
+                      invalid={Boolean(profileErrors.name)}
+                    />
                     {profileErrors.name ? <ErrorMessage>{profileErrors.name}</ErrorMessage> : null}
                   </Field>
                   <Field>
-                    <Label>Email</Label>
-                    <Input type="email" name="email" value={values.email ?? profile.email} required invalid={Boolean(profileErrors.email)} />
+                    <Label>
+                      Email <span className="text-destructive font-bold">*</span>
+                    </Label>
+                    <Input
+                      type="email"
+                      name="email"
+                      value={values.email ?? profile.email}
+                      required
+                      invalid={Boolean(profileErrors.email)}
+                    />
                     {profileErrors.email ? <ErrorMessage>{profileErrors.email}</ErrorMessage> : null}
                   </Field>
                   <Field>
                     <Label>Phone</Label>
-                    <Input type="tel" name="phone" value={values.phone ?? profile.phone ?? ''} placeholder="08xxxxxxxxxx" invalid={Boolean(profileErrors.phone)} />
+                    <Input
+                      type="tel"
+                      name="phone"
+                      value={values.phone ?? profile.phone ?? ''}
+                      placeholder="08xxxxxxxxxx"
+                      invalid={Boolean(profileErrors.phone)}
+                    />
                     <Description>Indonesian format, optional.</Description>
                     {profileErrors.phone ? <ErrorMessage>{profileErrors.phone}</ErrorMessage> : null}
                   </Field>
                 </div>
               </section>
             </Fieldset>
-            <Divider className="my-10" soft />
-            <div className="flex justify-end gap-4">
-              <Button type="reset" plain>
-                Reset
-              </Button>
-              <Button type="submit" color="blue">Save changes</Button>
-            </div>
+            <ActionRow
+              secondary={
+                <Button type="reset" plain>
+                  Reset
+                </Button>
+              }
+              primary={<SubmitButton label="Save changes" pendingText="Menyimpan..." color="blue" />}
+            />
           </form>
 
-          <form method="post" action={routes.app.changePassword.href()} className="mx-auto max-w-4xl">
+          <form method="post" action={routes.app.changePassword.href()} className="mx-auto max-w-4xl mt-12">
             <input type="hidden" name="_csrf" value={csrfToken} />
+            {hasPasswordErrors && <AutoFocusError />}
             <Divider className="my-10" />
             <Notice error={passwordErrors._} />
             <Fieldset>
@@ -105,24 +200,47 @@ export function ProfilePage(handle: Handle<{ user: AuthUser; profile: PublicUser
                 </div>
                 <div className="space-y-6">
                   <Field>
-                    <Label>Current password</Label>
-                    <Input type="password" name="current_password" autocomplete="current-password" required invalid={Boolean(passwordErrors.current_password)} />
-                    {passwordErrors.current_password ? <ErrorMessage>{passwordErrors.current_password}</ErrorMessage> : null}
+                    <Label>
+                      Current password <span className="text-destructive font-bold">*</span>
+                    </Label>
+                    <Input
+                      type="password"
+                      name="current_password"
+                      autocomplete="current-password"
+                      required
+                      invalid={Boolean(passwordErrors.current_password)}
+                    />
+                    {passwordErrors.current_password ? (
+                      <ErrorMessage>{passwordErrors.current_password}</ErrorMessage>
+                    ) : null}
                   </Field>
                   <Field>
-                    <Label>New password</Label>
-                    <Input type="password" name="new_password" autocomplete="new-password" required invalid={Boolean(passwordErrors.new_password)} />
-                    {passwordErrors.new_password ? <ErrorMessage>{passwordErrors.new_password}</ErrorMessage> : null}
+                    <Label>
+                      New password <span className="text-destructive font-bold">*</span>
+                    </Label>
+                    <Input
+                      type="password"
+                      name="new_password"
+                      autocomplete="new-password"
+                      required
+                      invalid={Boolean(passwordErrors.new_password)}
+                    />
+                    {passwordErrors.new_password ? (
+                      <ErrorMessage>{passwordErrors.new_password}</ErrorMessage>
+                    ) : null}
                   </Field>
                 </div>
               </section>
             </Fieldset>
-            <Divider className="my-10" soft />
-            <div className="flex justify-end">
-              <Button type="submit" outline>
-                Update password
-              </Button>
-            </div>
+            <ActionRow
+              primary={
+                <SubmitButton
+                  label="Update password"
+                  pendingText="Memperbarui..."
+                  variant="outline"
+                />
+              }
+            />
           </form>
         </AppShell>
       </Document>
