@@ -1,6 +1,6 @@
 # Panduan Standar UX Volt (Volt UX Guidelines)
 
-Panduan standar User Experience (UX) untuk starter template **Volt** (`laravolt/volt`), disusun berdasarkan hasil temuan nyata dan penyempurnaan pada sesi User Acceptance Testing (UAT) proyek *brain-v2.1* (khususnya *Product Frontend* dan *Helpdesk Frontend* PT Kubota Indonesia per 31 Agustus – 2 September 2026).
+Panduan standar User Experience (UX) untuk starter template **Volt** (`laravolt/volt`), disusun berdasarkan hasil temuan nyata dan penyempurnaan pada sesi User Acceptance Testing (UAT) proyek *brain-v2.1* (khususnya *Product Frontend* dan *Helpdesk Frontend* client per 31 Agustus – 2 September 2026).
 
 ---
 
