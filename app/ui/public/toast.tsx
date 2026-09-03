@@ -32,13 +32,15 @@ export const Toast = clientEntry<ToastProps>(import.meta.url, function Toast(han
     handle.update()
   }
 
-  // Set up auto-dismiss timers
-  for (let t of activeToasts) {
-    if (!timers[t.id]) {
-      let duration = t.durationMs ?? 5000
-      timers[t.id] = setTimeout(() => {
-        dismiss(t.id)
-      }, duration)
+  // Set up auto-dismiss timers on browser only
+  if (typeof window !== 'undefined') {
+    for (let t of activeToasts) {
+      if (!timers[t.id]) {
+        let duration = t.durationMs ?? 5000
+        timers[t.id] = setTimeout(() => {
+          dismiss(t.id)
+        }, duration)
+      }
     }
   }
 

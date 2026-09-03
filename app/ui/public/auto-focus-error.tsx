@@ -16,7 +16,7 @@ export const AutoFocusError = clientEntry<AutoFocusErrorProps>(
     return () => {
       let { selector = '[aria-invalid="true"], .is-invalid, [data-invalid="true"]' } = handle.props
 
-      if (!focused && typeof document !== 'undefined') {
+      if (!focused && typeof window !== 'undefined') {
         setTimeout(() => {
           let firstError = document.querySelector<HTMLElement>(selector)
           if (firstError) {
