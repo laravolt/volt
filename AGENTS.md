@@ -29,19 +29,22 @@ Install with `bun install` (npm on this machine blocks packages younger than 7 d
 - All pages use `volt-preline/*` (Preline UI tokens on Remix UI; git dep pinned by commit, MIT).
   `volt-catalyst/*` has the identical API for licensed teams. Props accept `className`; form
   controls read ids from `<Field>` context. Style with semantic tokens (`bg-card`, `text-muted-foreground`), not raw palette classes.
-- Interactive Catalyst parts only hydrate inside a `clientEntry` island under a `public/` dir:
+- Interactive UI only hydrates inside a `clientEntry` island under a `public/` dir:
   `app/ui/public/app-shell.tsx` (StackedLayout + Navbar + account Dropdown + mobile drawer) and
   `app/actions/app/public/users-table.tsx` (Table + Checkbox + Alert confirm). Island props must be
-  plain serializable objects typed with `type` aliases (interfaces fail `SerializableProps`).
+  plain serializable objects typed with `type` aliases (interfaces fail `SerializableProps`). Never
+  pass page content, event mixins, or another island through a client entry's children/serialized props;
+  independent sibling islands are allowed.
+- For any form, input, select/dropdown, filter, table/list, empty or error state, toast/notice, dialog/confirm, button, validation, or page-layout work, load `.claude/skills/volt-ux/SKILL.md`; use its `references/components.md` for verified APIs and `references/copywriting-id.md` for Indonesian UI copy.
 - Auth pages share `app/ui/auth-card.tsx`; `app/ui/form.tsx` holds `CsrfField`/`Notice`/`ActionRow`/`RequiredLegend`/types.
-- Standard UX components (UAT brain-v2.1 guidelines, detail di `docs/UX_GUIDELINES.md`):
+- Standard UX components (source-backed rules in `docs/UX_GUIDELINES.md`):
   - **Notice** (`app/ui/form.tsx`): Banner notifikasi halaman dengan varian semantik (`success`, `error`, `warning`, `info`), `role="alert"/"status"`, dan `aria-live="polite"`.
-  - **Toast** (`app/ui/public/toast.tsx`): Notifikasi melayang di pojok layar dengan auto-dismiss timer dan tombol tutup manual.
+  - **Toast** (`app/ui/public/toast.tsx`): Notifikasi pasif melayang dengan tombol tutup; hanya success/info yang auto-dismiss, sedangkan error/warning tetap terlihat.
   - **ActionRow** (`app/ui/form.tsx`): Baris tombol aksi form standar (`border-t`), aksi sekunder/batal di kiri, aksi primer di paling kanan.
-  - **SubmitButton** (`app/ui/public/submit-button.tsx`): Tombol submit interaktif yang mengunci double-submit, menampilkan spinner + label pending ("Menyimpan..."), dan mengeset `aria-busy="true"` pada form.
+  - **SubmitButton** (`app/ui/public/submit-button.tsx`): Tombol submit interaktif yang menangani event form `submit`, mengunci double-submit, menampilkan spinner + label pending ("Menyimpan..."), dan mengeset `aria-busy="true"` pada form.
   - **ConfirmDialog** (`app/ui/public/confirm-dialog.tsx`): Dialog konfirmasi modal berbasis `Alert` untuk aksi destruktif (delete, cancel) dengan deskripsi risiko eksplisit.
   - **EmptyState** (`app/ui/empty-state.tsx`): Komponen keadaan kosong standar untuk tabel/daftar dengan ikon, judul deskriptif, dan tombol aksi perbaikan.
-  - **AutoFocusError** (`app/ui/public/auto-focus-error.tsx`): Mengarahkan fokus kursor otomatis ke field pertama yang bermasalah saat validasi form gagal.
+  - **AutoFocusError** (`app/ui/public/auto-focus-error.tsx`): Untuk satu error, mengarahkan fokus ke field bermasalah setelah render; beberapa error memakai summary terfokus.
   - **Format Helpers** (`app/ui/public/format.ts` & `app/ui/format.ts`): `formatRupiah` (integer IDR tanpa sen), `parseRupiah`, `formatDateIndo`, `formatDateTimeIndo` (lokalisasi id-ID).
 - Never pass `checked/value/open={undefined}` explicitly to host elements (rc.1 resets the DOM prop).
 - After changing UI classes run `npm run css` (or keep `css:watch` running).

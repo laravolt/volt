@@ -1,6 +1,6 @@
 /**
- * Auto-focuses the first form field with an error on mount.
- * Implements UAT Rule #6 and Rule #7 (Error border beats focus ring).
+ * Focuses the first invalid field after hydration.
+ * For multiple errors, use a focused error summary instead.
  */
 import { clientEntry, type Handle } from 'remix/ui'
 
@@ -13,21 +13,17 @@ export const AutoFocusError = clientEntry<AutoFocusErrorProps>(
   function AutoFocusError(handle: Handle<AutoFocusErrorProps>) {
     let focused = false
 
-    return () => {
-      let { selector = '[aria-invalid="true"], .is-invalid, [data-invalid="true"]' } = handle.props
+    handle.queueTask(() => {
+      if (focused) return
+      let selector = handle.props.selector ?? '[aria-invalid="true"], .is-invalid, [data-invalid="true"]'
+      let firstError = document.querySelector<HTMLElement>(selector)
+      if (!firstError) return
 
-      if (!focused && typeof window !== 'undefined') {
-        setTimeout(() => {
-          let firstError = document.querySelector<HTMLElement>(selector)
-          if (firstError) {
-            firstError.focus()
-            firstError.setAttribute('data-focused-error', 'true')
-            focused = true
-          }
-        }, 50)
-      }
+      firstError.focus()
+      firstError.setAttribute('data-focused-error', 'true')
+      focused = true
+    })
 
-      return null
-    }
+    return () => null
   },
 )

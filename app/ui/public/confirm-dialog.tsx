@@ -1,6 +1,5 @@
 /**
- * Reusable Confirmation Dialog wrapping volt-preline Alert.
- * Follows UAT Rule #3 (explicit confirmation modal for destructive actions).
+ * Reusable confirmation dialog wrapping volt-preline Alert.
  */
 import { clientEntry, on, type Handle } from 'remix/ui'
 import { Alert, AlertActions, AlertDescription, AlertTitle } from 'volt-preline/alert'
@@ -42,19 +41,29 @@ export const ConfirmDialog = clientEntry<ConfirmDialogProps>(
         className = '',
       } = handle.props
 
-      return (
-        <div className={className}>
-          <Button
-            type="button"
-            variant={triggerVariant}
-            color={triggerColor}
-            mix={on<HTMLButtonElement, 'click'>('click', () => {
-              open = true
-              handle.update()
-            })}
-          >
+      let openDialog = on<HTMLButtonElement, 'click'>('click', () => {
+        open = true
+        handle.update()
+      })
+
+      let trigger =
+        triggerVariant === 'ghost' ? (
+          <Button type="button" plain mix={openDialog}>
             {triggerLabel}
           </Button>
+        ) : triggerVariant === 'outline' || triggerVariant === 'secondary' ? (
+          <Button type="button" outline mix={openDialog}>
+            {triggerLabel}
+          </Button>
+        ) : (
+          <Button type="button" color={triggerColor} mix={openDialog}>
+            {triggerLabel}
+          </Button>
+        )
+
+      return (
+        <div className={className}>
+          {trigger}
 
           <Alert
             open={open}
@@ -80,14 +89,7 @@ export const ConfirmDialog = clientEntry<ConfirmDialogProps>(
               {formAction ? (
                 <form method={formMethod} action={formAction}>
                   {csrfToken && <input type="hidden" name="_csrf" value={csrfToken} />}
-                  <Button
-                    type="submit"
-                    color={confirmColor}
-                    mix={on<HTMLButtonElement, 'click'>('click', () => {
-                      open = false
-                      handle.update()
-                    })}
-                  >
+                  <Button type="submit" color={confirmColor}>
                     {confirmLabel}
                   </Button>
                 </form>
