@@ -112,6 +112,13 @@ default so issue-driven evaluations remain deterministic. `[CHOICE]`
 - An existing table/page island owns its interactive descendants: compose plain `Alert`, `Combobox`, or project-helper internals there instead of nesting another client entry. `[VOLT]`
 - Never pass `checked`, `value`, or `open` explicitly as `undefined`; use conditional spreads. `[VOLT]`
 
+## Hydration and E2E contract
+
+- **Islands persist across frame DOM patches:** Same-origin navigation patches the DOM; matching island instances remain alive and receive updated props instead of remounting. Synchronize state from props on each render (`syncFromProps`). `[VOLT]`
+- **Submit locks must provide release paths:** When a form submission returns an error response (401, 422) into the frame, the island is not recreated. Submit buttons must observe DOM mutations (`[role="alert"]`, `[aria-invalid="true"]`) and form `input` events to release pending locks. `[BUTTON] [VOLT]`
+- **Deterministic hydration marker:** `app.ready()` tags `<html data-hydrated>`. Re-applied via MutationObserver when frame patches rewrite root attributes. E2E tests should wait for `waitForHydration(page)` before user interactions. `[VOLT]`
+- **Identity-based shell matching:** Use `data-rmx-key` on root shell, main container, and header so the DOM patcher matches containers by identity rather than sibling position. `[VOLT]`
+
 ## PR review checklist
 
 - [ ] Component follows the decision table; deviations state user/content constraints.

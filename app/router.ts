@@ -24,6 +24,7 @@ import { csrf } from './middleware/csrf.ts'
 import { domainErrors } from './middleware/errors.ts'
 import { loadServices } from './middleware/services.ts'
 import { createDbSessionStorage, createSessionCookie } from './middleware/session.ts'
+import { theme } from './middleware/theme.ts'
 import { routes } from './routes.ts'
 import { type AppServices, createServices } from './services/index.ts'
 import type { Mailer } from './services/mailer.ts'
@@ -49,6 +50,7 @@ function buildMiddleware(services: AppServices, sessionStorage: SessionStorage, 
     domainErrors(),
     loadServices(services),
     loadAuth(),
+    theme(),
     render({ assets }),
   )
 }
