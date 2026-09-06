@@ -60,13 +60,13 @@ export const AppShell = clientEntry<AppShellProps>(import.meta.url, function App
     let initials = initialsOf(user.name, user.email)
 
     return (
-      <>
+      <div data-rmx-key="app-shell">
         <form id={LOGOUT_FORM_ID} method="post" action={routes.auth.logout.href()} hidden>
           <input type="hidden" name="_csrf" value={csrfToken} />
         </form>
         <StackedLayout
           navbar={
-            <Navbar>
+            <Navbar data-rmx-key="app-header">
               <NavbarItem href={routes.home.href()} aria-label="Volt home">
                 <img src="/favicon.svg" alt="" className="size-6" />
                 <NavbarLabel>Volt</NavbarLabel>
@@ -134,9 +134,11 @@ export const AppShell = clientEntry<AppShellProps>(import.meta.url, function App
             </Sidebar>
           }
         >
-          {children}
+          <div data-rmx-key="app-main">
+            {children}
+          </div>
         </StackedLayout>
-      </>
+      </div>
     )
   }
 })

@@ -1,6 +1,15 @@
 import { run, type ResolveFrameOptions } from 'remix/ui'
 import { installDarkMode } from 'volt-preline/dark-mode'
 
+// Synchronize theme cookie from localStorage (source of truth on the client) so the server
+// renders the correct <html class="dark"> on the first byte and across frame patches.
+try {
+  let pref = localStorage.getItem('volt-theme')
+  document.cookie =
+    pref === 'light' || pref === 'dark'
+      ? `volt-theme=${pref}; path=/; max-age=31536000; SameSite=Lax`
+      : 'volt-theme=; path=/; max-age=0; SameSite=Lax'
+} catch {}
 installDarkMode()
 
 function normalizeLineBreaks(value: string): string {
@@ -48,8 +57,39 @@ function showFrameNotice(message: string) {
   }, 5000)
 }
 
+// Thin navigation progress bar at the top of the viewport for frame transitions.
+let progressTimer: ReturnType<typeof setTimeout> | undefined
+let inflight = 0
+function progressEl(): HTMLElement {
+  let el = document.getElementById('volt-progress')
+  if (!el) {
+    el = document.createElement('div')
+    el.id = 'volt-progress'
+    el.setAttribute('aria-hidden', 'true')
+    document.body.appendChild(el)
+  }
+  return el
+}
+function progressStart() {
+  inflight++
+  if (progressTimer) return
+  // 120ms delay: quick navigations complete before the bar displays, avoiding flicker.
+  progressTimer = setTimeout(() => progressEl().setAttribute('data-state', 'loading'), 120)
+}
+function progressDone() {
+  inflight = Math.max(0, inflight - 1)
+  if (inflight > 0) return
+  if (progressTimer) clearTimeout(progressTimer)
+  progressTimer = undefined
+  let el = document.getElementById('volt-progress')
+  if (!el || el.getAttribute('data-state') !== 'loading') return
+  el.setAttribute('data-state', 'done')
+  setTimeout(() => el?.removeAttribute('data-state'), 250)
+}
+
 async function resolveFrame(src: string, options?: ResolveFrameOptions): Promise<Response> {
   let response: Response
+  progressStart()
   try {
     response = await fetch(src, {
       body: getRequestBody(options),
@@ -58,10 +98,12 @@ async function resolveFrame(src: string, options?: ResolveFrameOptions): Promise
       signal: options?.signal,
     })
   } catch (error) {
+    progressDone()
     if (options?.signal?.aborted) throw error
     showFrameNotice('Terjadi kesalahan jaringan. Silakan periksa koneksi Anda.')
     throw error
   }
+  progressDone()
 
   let contentType = response.headers.get('content-type') ?? ''
   if (contentType.includes('text/html')) {
@@ -80,6 +122,19 @@ const app = run({
   },
   resolveFrame,
 })
+
+// Deterministic hydration marker (<html data-hydrated>): re-applied when frame patches rewrite <html> attributes.
+app
+  .ready()
+  .then(() => {
+    let root = document.documentElement
+    let mark = () => {
+      if (!root.hasAttribute('data-hydrated')) root.setAttribute('data-hydrated', '')
+    }
+    mark()
+    new MutationObserver(mark).observe(root, { attributes: true, attributeFilter: ['data-hydrated'] })
+  })
+  .catch(() => {})
 
 if (import.meta.hot) {
   import.meta.hot.on('server:update', async () => {

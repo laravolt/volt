@@ -12,4 +12,17 @@
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+/* color-scheme follows the `dark` class via CSS rather than inline style so it survives frame patches. */
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+
+/* Global frame navigation progress indicator (managed by app/actions/public/entry.ts). */
+#volt-progress {
+  position: fixed; inset-inline: 0; top: 0; z-index: 100; height: 2px;
+  background: var(--color-primary, #2563eb); transform-origin: left; transform: scaleX(0);
+  opacity: 0; transition: transform 300ms ease-out, opacity 200ms ease-out; pointer-events: none;
+}
+#volt-progress[data-state="loading"] { opacity: 1; transform: scaleX(0.7); transition: transform 8s cubic-bezier(0.1, 0.5, 0.2, 1), opacity 100ms; }
+#volt-progress[data-state="done"] { opacity: 0; transform: scaleX(1); }
+
 /* Tailwind Plus components can be pasted as-is into app/ui or app/actions pages. */
