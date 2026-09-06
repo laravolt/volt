@@ -18,7 +18,7 @@ const server = http.createServer(
       }
       return new Response('Internal Server Error', { status: 500 })
     }
-  }),
+  }, { trustProxy: config.trustProxy }),
 )
 
 server.listen(config.port, () => {
