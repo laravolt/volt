@@ -1,6 +1,9 @@
 /**
  * Test harness: in-memory SQLite + migrations + app router with rate limits disabled.
  */
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+
 import { openDatabase, type Db } from '../app/data/db.ts'
 import { migrate } from '../app/data/migrate.ts'
 import { createAppRouter } from '../app/router.ts'
@@ -16,6 +19,34 @@ export async function createTestDb(): Promise<Db> {
   let db = openDatabase(':memory:')
   await migrate(db, 'up')
   return db
+}
+
+export async function createIsolatedTestDb(
+  prefix = 'test-e2e',
+): Promise<{ db: Db; filePath: string; cleanup: () => void }> {
+  let tmpDir = path.resolve(import.meta.dirname, '../tmp')
+  if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true })
+  let filePath = path.join(
+    tmpDir,
+    `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}.sqlite`,
+  )
+  process.env.DATABASE_FILE = filePath
+  let db = openDatabase(filePath)
+  await migrate(db, 'up')
+  return {
+    db,
+    filePath,
+    cleanup() {
+      try {
+        db.close()
+      } catch {}
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath)
+        } catch {}
+      }
+    },
+  }
 }
 
 export interface TestApp {

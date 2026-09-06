@@ -21,6 +21,10 @@ export const config = {
   isDevelopment: nodeEnv === 'development',
   port: process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 5555,
   appUrl: process.env.APP_URL ?? 'http://localhost:5555',
+  // Behind reverse proxies (Tailscale serve, Cloudflare Tunnel, Nginx, Caddy),
+  // trust X-Forwarded-Proto/Host/For headers for accurate origin, HTTPS, and IP detection.
+  // Defaults to true in production, false in development/test.
+  trustProxy: process.env.TRUST_PROXY ? process.env.TRUST_PROXY === '1' : isProduction,
   sessionSecret,
   databaseFile: process.env.DATABASE_FILE ?? './db/volt.sqlite',
   google: {

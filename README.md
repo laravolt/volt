@@ -95,6 +95,24 @@ bun install && npm run migrate && npm run start
 Set `BUILD_ID` per deploy for immutable fingerprinted asset URLs. Put a TLS proxy in front.
 Container: `docker build --build-arg BUILD_ID=$(git rev-parse --short HEAD) -t volt .`
 
+### Reverse proxy & HTTPS deployment (Tailscale serve, Cloudflare Tunnel, Nginx, Caddy)
+
+When deploying behind a reverse proxy or TLS termination layer:
+
+1. **HTTPS and Secure Cookies:**
+   In production (`NODE_ENV=production`), session cookies are automatically stamped with `Secure; HttpOnly; SameSite=Lax`. Browsers will reject storing or sending these cookies over plain HTTP. Ensure the site is served over HTTPS.
+
+2. **Proxy Trust (`trustProxy` / `TRUST_PROXY`):**
+   When a proxy forwards traffic to Volt via HTTP (e.g. `http://127.0.0.1:5555`), request headers like `X-Forwarded-Proto`, `X-Forwarded-Host`, and `X-Forwarded-For` must be trusted.
+   Volt enables `trustProxy: config.trustProxy` in `server.ts` by default in production (`TRUST_PROXY=1`).
+   Without this, Remix's CSRF protection detects an origin mismatch between the incoming browser request (`https://...`) and the local node request (`http://127.0.0.1:5555`), returning `403 Forbidden` (`invalid-origin`) on state-changing POST requests.
+
+3. **Tailscale Serve Example:**
+   ```sh
+   sudo tailscale set --operator=$USER
+   tailscale serve --bg https / http://127.0.0.1:5555
+   ```
+
 
 > **npm note:** on machines with `minimum-release-age` in `~/.npmrc`, `remix@3.0.0-rc.1` may be
 > hidden from npm for a week after release; `bun install` is unaffected.
