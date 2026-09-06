@@ -20,8 +20,9 @@ export type ToastProps = {
 }
 
 export const Toast = clientEntry<ToastProps>(import.meta.url, function Toast(handle: Handle<ToastProps>) {
-  let activeToasts: ToastItem[] = [...handle.props.toasts]
+  let activeToasts: ToastItem[] = []
   let timers: Record<string, ReturnType<typeof setTimeout>> = {}
+  let lastToasts: ToastItem[] | undefined
 
   function dismiss(id: string) {
     if (timers[id]) {
@@ -33,7 +34,8 @@ export const Toast = clientEntry<ToastProps>(import.meta.url, function Toast(han
   }
 
   // Only passive secondary feedback may auto-dismiss. Errors and warnings persist.
-  if (typeof window !== 'undefined') {
+  function scheduleTimers() {
+    if (typeof window === 'undefined') return
     for (let t of activeToasts) {
       let variant = t.variant ?? 'info'
       if (variant === 'error' || variant === 'warning' || timers[t.id]) continue
@@ -46,7 +48,21 @@ export const Toast = clientEntry<ToastProps>(import.meta.url, function Toast(han
     }
   }
 
+  // Island ini bisa tetap hidup saat frame di-patch (mis. Toast selalu dirender di layout/shell),
+  // jadi daftar aktif harus disegarkan setiap kali props toasts baru datang dari server.
+  function syncFromProps() {
+    if (handle.props.toasts === lastToasts) return
+    lastToasts = handle.props.toasts
+    for (let id of Object.keys(timers)) {
+      clearTimeout(timers[id])
+      delete timers[id]
+    }
+    activeToasts = [...handle.props.toasts]
+    scheduleTimers()
+  }
+
   return () => {
+    syncFromProps()
     let { position = 'top-right' } = handle.props
 
     if (activeToasts.length === 0) return null

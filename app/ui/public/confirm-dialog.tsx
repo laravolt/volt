@@ -17,6 +17,7 @@ export type ConfirmDialogProps = {
   formAction?: string
   formMethod?: string
   csrfToken?: string
+  formId?: string
   className?: string
 }
 
@@ -38,6 +39,7 @@ export const ConfirmDialog = clientEntry<ConfirmDialogProps>(
         formAction,
         formMethod = 'POST',
         csrfToken,
+        formId,
         className = '',
       } = handle.props
 
@@ -66,6 +68,7 @@ export const ConfirmDialog = clientEntry<ConfirmDialogProps>(
           {trigger}
 
           <Alert
+            className="text-center"
             open={open}
             onClose={() => {
               open = false
@@ -74,7 +77,7 @@ export const ConfirmDialog = clientEntry<ConfirmDialogProps>(
           >
             <AlertTitle>{dialogTitle}</AlertTitle>
             <AlertDescription>{dialogDescription}</AlertDescription>
-            <AlertActions>
+            <AlertActions className="sm:justify-center">
               <Button
                 type="button"
                 plain
@@ -100,6 +103,10 @@ export const ConfirmDialog = clientEntry<ConfirmDialogProps>(
                   mix={on<HTMLButtonElement, 'click'>('click', () => {
                     open = false
                     handle.update()
+                    if (formId) {
+                      let form = document.getElementById(formId) as HTMLFormElement | null
+                      form?.requestSubmit()
+                    }
                   })}
                 >
                   {confirmLabel}

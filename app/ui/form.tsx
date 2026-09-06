@@ -13,6 +13,7 @@ export type FieldErrors = Record<string, string>
 export interface FlashMessages {
   error?: string
   success?: string
+  status?: string
   warning?: string
   info?: string
 }
@@ -20,11 +21,13 @@ export interface FlashMessages {
 export function readFlash(session: { get(key: string): unknown }): FlashMessages {
   let error = session.get('error')
   let success = session.get('success')
+  let status = session.get('status')
   let warning = session.get('warning')
   let info = session.get('info')
   return {
     error: typeof error === 'string' ? error : undefined,
-    success: typeof success === 'string' ? success : undefined,
+    success: typeof success === 'string' ? success : typeof status === 'string' ? status : undefined,
+    status: typeof status === 'string' ? status : undefined,
     warning: typeof warning === 'string' ? warning : undefined,
     info: typeof info === 'string' ? info : undefined,
   }

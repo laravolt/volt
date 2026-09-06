@@ -6,7 +6,7 @@ import * as s from 'remix/data-schema'
 import type { RequestContext } from 'remix/router'
 
 import { DomainError } from '../services/errors.ts'
-import type { FieldErrors, FlashMessages } from '../ui/form.tsx'
+import { readFlash as readFormFlash, type FieldErrors, type FlashMessages } from '../ui/form.tsx'
 
 export type ParseResult<T> = { ok: true; value: T } | { ok: false; errors: FieldErrors }
 
@@ -22,12 +22,7 @@ export function parseForm<T>(schema: s.Schema<any, T>, formData: FormData): Pars
 }
 
 export function readFlash(session: Session): FlashMessages {
-  let error = session.get('error')
-  let success = session.get('success')
-  return {
-    error: typeof error === 'string' ? error : undefined,
-    success: typeof success === 'string' ? success : undefined,
-  }
+  return readFormFlash(session)
 }
 
 export function formValues(formData: FormData, keys: string[]): Record<string, string> {

@@ -36,6 +36,13 @@ export const SubmitButton = clientEntry<SubmitButtonProps>(
       let form = node.form
       if (!form) return
 
+      let release = () => {
+        if (!pending) return
+        pending = false
+        form.removeAttribute('aria-busy')
+        handle.update()
+      }
+
       form.addEventListener(
         'submit',
         (event) => {
@@ -48,6 +55,25 @@ export const SubmitButton = clientEntry<SubmitButtonProps>(
           pending = true
           form.setAttribute('aria-busy', 'true')
           handle.update()
+
+          // Lepaskan kunci bila respons error dirender ke frame (island tidak dibuat ulang
+          // saat frame di-patch), atau bila pengguna mengedit form lagi.
+          let observer = new MutationObserver(() => {
+            if (document.querySelector('[role="alert"], [aria-invalid="true"]')) {
+              observer.disconnect()
+              release()
+            }
+          })
+          observer.observe(document.body, { childList: true, subtree: true, attributes: true })
+          form.addEventListener(
+            'input',
+            () => {
+              observer.disconnect()
+              release()
+            },
+            { once: true, signal },
+          )
+          signal.addEventListener('abort', () => observer.disconnect(), { once: true })
         },
         { signal },
       )
