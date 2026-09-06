@@ -1,6 +1,6 @@
 {
   "name": "volt",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "description": "High-performance full-stack TypeScript framework on Remix 3.0.0-rc.1, recreated from laravolt/laju.",
@@ -26,7 +26,7 @@
   "dependencies": {
     "better-sqlite3": "12.8.0",
     "remix": "3.0.0-rc.1",
-    "volt-preline": "github:laravolt/volt-preline#v0.1.1"
+    "volt-preline": "github:laravolt/volt-preline#v0.2.0"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",
