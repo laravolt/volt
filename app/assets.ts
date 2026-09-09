@@ -9,23 +9,25 @@ const isHmr = Boolean(isDevelopment && process.env.REMIX_NODE_HMR)
 const config = await loadConfig(import.meta.dirname)
 if (config.assets === undefined) throw new Error('Missing assets configuration in remix.json')
 
-// In production, set BUILD_ID (e.g. the git SHA) per deployment: assets get fingerprinted URLs
-// with `Cache-Control: public, max-age=31536000, immutable`. Without it, URLs are stable + ETag.
-const buildId = process.env.BUILD_ID
-
 export const assets = createAssetServer({
   ...config.assets,
   sourceMaps: isDevelopment ? 'external' : undefined,
   minify: !isDevelopment,
   watch: isDevelopment,
-  fingerprint: !isDevelopment && buildId ? { buildId } : undefined,
+  // Fingerprints hash the final emitted bytes, so no BUILD_ID is needed. Fingerprinted URLs are
+  // served with `Cache-Control: public, max-age=31536000, immutable`; watch mode keeps stable URLs.
+  fingerprint: !isDevelopment,
   hmr: isHmr
-    ? async () => (await import('remix/node-hmr/runtime')).createBrowserHmrChannel()
+    ? {
+        channel: async () => (await import('remix/node-hmr/runtime')).createBrowserHmrChannel(),
+        // Browsers without support for multiple import maps load updates through this polyfill.
+        moduleImporter: 'remix/multiple-import-maps-polyfill',
+      }
     : undefined,
   scripts: { loaders: isHmr ? [uiHmr()] : undefined },
 })
 
 const entry = 'app/actions/public/entry.ts'
 
-export const entryHref = await assets.getHref(entry)
-export const entryPreloads = await assets.getPreloads(entry)
+// href + preloads + import map for the client entry (replaces getHref/getPreloads).
+export const scriptEntry = await assets.getScriptEntry(entry)
