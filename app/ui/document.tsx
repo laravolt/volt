@@ -1,8 +1,9 @@
 import type { Handle, RemixNode } from 'remix/ui'
+import { ImportMap } from 'remix/ui/server'
 import { darkModeHeadScript } from 'volt-preline/dark-mode'
 
 import { currentTheme } from '../middleware/theme.ts'
-import { entryHref, entryPreloads } from '../assets.ts'
+import { scriptEntry } from '../assets.ts'
 
 export interface DocumentProps {
   children?: RemixNode
@@ -13,6 +14,7 @@ export interface DocumentProps {
 export function Document(handle: Handle<DocumentProps>) {
   return () => {
     let { children, head, title } = handle.props
+    let { href, importMap, preloads } = scriptEntry
     let theme = currentTheme()
     return (
       <html lang="en" className={theme === 'dark' ? 'h-full dark' : 'h-full'} data-theme={theme ?? 'system'}>
@@ -25,10 +27,11 @@ export function Document(handle: Handle<DocumentProps>) {
           <link rel="stylesheet" href="/app.css" />
           <title>{title ? `${title} · Volt` : 'Volt'}</title>
           {head}
-          {entryPreloads.map((href) => (
-            <link key={href} rel="modulepreload" href={href} />
+          <ImportMap value={importMap} />
+          {preloads.map((preloadHref) => (
+            <link key={preloadHref} rel="modulepreload" href={preloadHref} />
           ))}
-          <script type="module" src={entryHref}></script>
+          <script type="module" src={href}></script>
         </head>
         <body className="h-full bg-background text-foreground antialiased">
           {children}

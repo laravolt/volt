@@ -1,3 +1,8 @@
+import {
+  detectMultipleImportMapSupport,
+  importModule,
+  preloadShim,
+} from 'remix/multiple-import-maps-polyfill'
 import { run, type ResolveFrameOptions } from 'remix/ui'
 import { installDarkMode } from 'volt-preline/dark-mode'
 
@@ -105,8 +110,11 @@ async function resolveFrame(src: string, options?: ResolveFrameOptions): Promise
   }
   progressDone()
 
+  // Same semantics as the built-in resolver: HTML responses with 3xx/4xx status codes (422
+  // validation, 401) still render into the frame; only 5xx or non-HTML responses throw.
   let contentType = response.headers.get('content-type') ?? ''
-  if (contentType.includes('text/html')) {
+  let isHtml = contentType.toLowerCase().includes('text/html')
+  if (response.status < 500 && (response.ok || isHtml)) {
     return response
   }
 
@@ -116,9 +124,20 @@ async function resolveFrame(src: string, options?: ResolveFrameOptions): Promise
 }
 
 const app = run({
+  // Modules resolve through import maps; browsers without support for multiple maps use the polyfill.
   async loadModule(moduleUrl, exportName) {
-    let mod = await import(moduleUrl)
-    return mod[exportName]
+    let mod = await importModule(moduleUrl)
+    let component = mod[exportName]
+    if (typeof component !== 'function') {
+      throw new Error(`Unknown component: ${moduleUrl}#${exportName}`)
+    }
+    return component
+  },
+  async processClientEntryPreloads(preloads) {
+    if (await detectMultipleImportMapSupport()) return preloads
+
+    preloadShim(preloads)
+    return []
   },
   resolveFrame,
 })
