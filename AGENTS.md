@@ -1,6 +1,6 @@
 # Volt — Agent Guide
 
-Remix **3.0.0-rc.1** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + volt-preline.
+Remix **3.0.0-rc.4** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + volt-preline (upgrade notes in `docs/UPGRADING.md`).
 
 ## Commands
 ```sh

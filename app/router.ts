@@ -57,7 +57,7 @@ function buildMiddleware(services: AppServices, sessionStorage: SessionStorage, 
 
 export type AppContext = MiddlewareContext<ReturnType<typeof buildMiddleware>>
 
-declare module 'remix/router' {
+declare module 'remix' {
   interface RouterTypes {
     context: AppContext
   }

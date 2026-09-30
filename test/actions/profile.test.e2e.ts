@@ -38,6 +38,10 @@ describe('Profile E2E', () => {
 
       let updatedUser = harness.repos.users.findById(user.id)
       assert.equal(updatedUser?.name, 'Updated Name')
+
+      // The runtime follows the 303 with a GET after the POST resolves; let it settle so no
+      // request hits the database after the harness closes it.
+      await page.waitForLoadState('networkidle')
     } finally {
       harness.cleanup()
     }
