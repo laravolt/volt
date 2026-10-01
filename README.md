@@ -6,7 +6,7 @@ the way Remix 3 intends: `Request`/`Response`, real `<form>`s that post without 
 app needs on day one: auth, DB-backed sessions, CSRF, an admin shell, a component kit and a strict
 Handler → Service → Repository architecture, so teams ship real systems quickly and consistently.
 
-Baseline: **Remix `3.0.0-rc.1`** (pinned; not Remix v2 / React Router).
+Baseline: **Remix `3.0.0-rc.4`** (pinned; not Remix v2 / React Router). Upgrade notes for derived apps: `docs/UPGRADING.md`.
 UI: **[volt-preline](https://github.com/laravolt/volt-preline)** (Preline UI 5, MIT) by default;
 [volt-catalyst](http://100.121.236.127:3000/rama/volt-catalyst) (Tailwind Plus Catalyst) is a
 drop-in upgrade for licensed teams.
