@@ -2,6 +2,7 @@
   "name": "volt",
   "version": "0.5.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "High-performance full-stack TypeScript framework on Remix 3.0.0-rc.1, recreated from laravolt/laju.",
   "scripts": {
