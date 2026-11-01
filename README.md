@@ -8,8 +8,8 @@ Handler → Service → Repository architecture, so teams ship real systems quic
 
 Baseline: **Remix `3.0.0-rc.4`** (pinned; not Remix v2 / React Router). Upgrade notes for derived apps: `docs/UPGRADING.md`.
 UI: **[volt-preline](https://github.com/laravolt/volt-preline)** (Preline UI 5, MIT) by default;
-[volt-catalyst](http://100.121.236.127:3000/rama/volt-catalyst) (Tailwind Plus Catalyst) is a
-drop-in upgrade for licensed teams.
+`volt-catalyst` (Tailwind Plus Catalyst, private) is a drop-in upgrade for teams with a Tailwind Plus
+license (see [UI kit](#ui-kit)).
 
 ## Quick start
 
