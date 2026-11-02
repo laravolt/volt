@@ -37,3 +37,17 @@ jobs:
 
       - name: CSS builds
         run: npm run -s css
+
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: npx playwright install --with-deps chromium
+      - run: npm run -s css
+      - run: npx remix test --type e2e
