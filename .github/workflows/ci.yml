@@ -32,8 +32,35 @@ jobs:
       - name: Typecheck
         run: npm run -s typecheck
 
+      - name: Doctor
+        run: npm run -s doctor
+
       - name: Unit tests
         run: npm test
 
       - name: CSS builds
         run: npm run -s css
+
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: CSS builds
+        run: npm run -s css
+
+      - name: E2E tests
+        run: npx remix test --type e2e

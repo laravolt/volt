@@ -1,12 +1,13 @@
 # Volt — Agent Guide
 
-Remix **3.0.0-rc.4** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + volt-preline (upgrade notes in `docs/UPGRADING.md`).
+Remix **3.1.0** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + volt-preline (upgrade notes in `docs/UPGRADING.md`).
 
 ## Commands
 ```sh
 npm run dev | npm test | npm run typecheck | npm run migrate | npm run routes | npm run doctor
 ```
-Install with `bun install` (npm on this machine blocks packages younger than 7 days).
+Install with `bun install` (npm on this machine blocks packages younger than 7 days). `bun install`
+applies `patches/@remix-run%2Fcomponent@1.1.0.patch`; see `docs/UPGRADING.md` before bumping `remix`.
 
 ## Non-negotiable rules (see ARCHITECTURE.md)
 1. **Handler → Service → Repository → DB.** No layer may be skipped.
@@ -50,11 +51,13 @@ Install with `bun install` (npm on this machine blocks packages younger than 7 d
 - After changing UI classes run `npm run css` (or keep `css:watch` running).
 
 ## Remix 3 reference
-`.agents/skills/remix/SKILL.md` and `references/*.md` (shipped by `remix new`). Package READMEs:
-`node_modules/@remix-run/<pkg>/README.md`.
+`.agents/skills/remix/SKILL.md` (shipped by `remix new`): it points at the installed version's docs,
+`node_modules/remix/INDEX.md` and `node_modules/remix/guides/`. Package READMEs:
+`node_modules/@remix-run/<pkg>/README.md`. The component runtime is `remix/component`; `remix/ui` no
+longer exists, and UI primitives come from `@remix-run/ui` (used by `volt-preline`).
 
 ## Gotchas
-- JSX attributes are `className`/`htmlFor` (`jsxImportSource: remix/ui`). Components are
+- JSX attributes are `className`/`htmlFor` (`jsxImportSource: remix/component`). Components are
   `function X(handle: Handle<Props>) { return () => <.../> }`.
 - `data-schema` checks take no message argument; use `.refine(pred, message)` (see `str` helpers).
 - `app/router.ts` must stay side-effect free (tests import it); the real DB opens in `app/app.ts`.

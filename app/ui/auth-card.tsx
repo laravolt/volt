@@ -1,5 +1,5 @@
 /** Auth page: centered card with logo, heading and a form. */
-import type { Handle, RemixNode } from 'remix/ui'
+import type { Handle, RemixNode } from 'remix/component'
 import { AuthLayout } from 'volt-preline/auth-layout'
 import { Heading } from 'volt-preline/heading'
 

@@ -2,7 +2,7 @@
  * Focuses the first invalid field after hydration.
  * For multiple errors, use a focused error summary instead.
  */
-import { clientEntry, type Handle } from 'remix/ui'
+import { clientEntry, type Handle } from 'remix/component'
 
 export type AutoFocusErrorProps = {
   selector?: string

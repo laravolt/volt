@@ -2,7 +2,7 @@
  * Admin users table with bulk delete + confirmation (Table/Checkbox/Alert), hydrated island.
  * Follows UAT standards: empty state, Indonesian date formatting, explicit confirmation dialog.
  */
-import { clientEntry, on, type Handle } from 'remix/ui'
+import { clientEntry, on, type Handle } from 'remix/component'
 import { Alert, AlertActions, AlertDescription, AlertTitle } from 'volt-preline/alert'
 import { Badge } from 'volt-preline/badge'
 import { Button } from 'volt-preline/button'

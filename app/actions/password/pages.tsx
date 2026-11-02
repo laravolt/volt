@@ -1,4 +1,4 @@
-import type { Handle } from 'remix/ui'
+import type { Handle } from 'remix/component'
 import { ErrorMessage, Field, Label } from 'volt-preline/fieldset'
 import { Input } from 'volt-preline/input'
 import { Strong, Text, TextLink } from 'volt-preline/text'

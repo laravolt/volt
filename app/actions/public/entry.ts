@@ -3,7 +3,7 @@ import {
   importModule,
   preloadShim,
 } from 'remix/multiple-import-maps-polyfill'
-import { run, type ResolveFrameOptions } from 'remix/ui'
+import { run, type ResolveFrameOptions } from 'remix/component'
 import { installDarkMode } from 'volt-preline/dark-mode'
 
 // Synchronize theme cookie from localStorage (source of truth on the client) so the server

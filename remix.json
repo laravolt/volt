@@ -4,7 +4,7 @@
     "rootDir": ".",
     "basePath": "/assets",
     "allowFiles": ["app/routes.ts", "app/**/public/**"],
-    "allowPackages": ["remix", "volt-preline"],
+    "allowPackages": ["remix", "@remix-run/component", "@remix-run/ui", "volt-preline"],
     "denyFiles": ["app/**/*.test.*"]
   },
   "db": {

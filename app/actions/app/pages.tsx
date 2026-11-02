@@ -1,4 +1,4 @@
-import type { Handle } from 'remix/ui'
+import type { Handle } from 'remix/component'
 import { Button } from 'volt-preline/button'
 import { Divider } from 'volt-preline/divider'
 import { Description, ErrorMessage, Field, Fieldset, Label } from 'volt-preline/fieldset'

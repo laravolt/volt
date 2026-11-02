@@ -5,7 +5,7 @@
  * - RequiredLegend for standard single-instance required marker
  * - CSRF field helper and flash message reader
  */
-import type { ElementProps, Handle, RemixNode } from 'remix/ui'
+import type { ElementProps, Handle, RemixNode } from 'remix/component'
 import { Text } from 'volt-preline/text'
 
 export type FieldErrors = Record<string, string>

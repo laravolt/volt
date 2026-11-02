@@ -2,7 +2,7 @@
  * Toast notification component with auto-dismiss, variants, and aria-live.
  * Follows UAT Rule #4.
  */
-import { clientEntry, on, type Handle } from 'remix/ui'
+import { clientEntry, on, type Handle } from 'remix/component'
 
 export type ToastVariant = 'success' | 'error' | 'warning' | 'info'
 

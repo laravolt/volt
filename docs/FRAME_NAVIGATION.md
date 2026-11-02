@@ -1,6 +1,6 @@
 # Frame Navigation, Islands, and Hydration
 
-Volt is built on web-standards Remix 3 (`remix/ui`), where client-side navigation operates via DOM morphing (frame patches) rather than traditional full-page reloads.
+Volt is built on web-standards Remix 3 (`remix/component`), where client-side navigation operates via DOM morphing (frame patches) rather than traditional full-page reloads.
 
 ## 1. Frame Navigation & Island Lifecycle
 

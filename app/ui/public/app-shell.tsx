@@ -2,7 +2,7 @@
  * Application shell (StackedLayout) as a hydrated island so the account Dropdown and the
  * mobile navigation drawer work. Page content is passed as `children`.
  */
-import { clientEntry, on, type Handle, type RemixNode } from 'remix/ui'
+import { clientEntry, on, type Handle, type RemixNode } from 'remix/component'
 import { Avatar } from 'volt-preline/avatar'
 import {
   Dropdown,
