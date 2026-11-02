@@ -1,6 +1,6 @@
 # Volt — Remix 3.1 on Node. No bundling step: the asset server compiles browser modules on
 # demand (minified, fingerprinted with BUILD_ID) and Node runs TypeScript via remix/node-tsx.
-FROM node:24-bookworm-slim AS base
+FROM node:25-bookworm-slim AS base
 ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git python3 make g++ unzip \
   && rm -rf /var/lib/apt/lists/* \
