@@ -12,6 +12,7 @@ WORKDIR /app
 # private git dependency: pass credentials via BuildKit secret or a token in the URL at build time.
 FROM base AS build
 COPY package.json bun.lock ./
+COPY patches ./patches
 RUN --mount=type=secret,id=gitcredentials,target=/root/.git-credentials \
     git config --global credential.helper store && bun install --frozen-lockfile
 COPY . .
