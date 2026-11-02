@@ -3,7 +3,7 @@
  * Synchronizes client preference with `volt-theme` cookie so server rendering
  * stays in sync without color-scheme flicker across frame navigations.
  */
-import { clientEntry, on, type Handle } from 'remix/ui'
+import { clientEntry, on, type Handle } from 'remix/component'
 import { setTheme, type ThemePreference } from 'volt-preline/dark-mode'
 
 export type ThemeSelectorProps = {

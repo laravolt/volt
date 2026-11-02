@@ -1,8 +1,8 @@
 # Volt Architecture
 
 ## Baseline decision
-Framework baseline is pinned to **Remix `3.0.0-rc.1`**:  
-https://github.com/remix-run/remix/releases/tag/remix%403.0.0-rc.1
+Framework baseline is pinned to **Remix `3.1.0`**:  
+https://github.com/remix-run/remix/releases/tag/remix%403.1.0
 
 This is a hard decision to avoid accidental fallback to Remix stable v2.
 
@@ -151,7 +151,7 @@ Minimum v1 coverage (implemented):
 
 A PR is architecture-compliant only if all pass:
 
-- [ ] Remix baseline remains `3.0.0-rc.1` aligned (`package.json` pins the exact version)
+- [ ] Remix baseline remains `3.1.0` aligned (`package.json` pins the exact version)
 - [ ] No SQL outside `app/repositories/*`
 - [ ] No business rules in `app/actions/*`
 - [ ] Session rotation behavior preserved on login

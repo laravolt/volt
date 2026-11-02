@@ -1,4 +1,4 @@
-# Volt — Remix 3.0.0-rc.1 on Node. No bundling step: the asset server compiles browser modules on
+# Volt — Remix 3.1 on Node. No bundling step: the asset server compiles browser modules on
 # demand (minified, fingerprinted with BUILD_ID) and Node runs TypeScript via remix/node-tsx.
 FROM node:24-bookworm-slim AS base
 ENV NODE_ENV=production

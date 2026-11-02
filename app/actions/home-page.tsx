@@ -1,4 +1,4 @@
-import type { Handle } from 'remix/ui'
+import type { Handle } from 'remix/component'
 import { Button } from 'volt-preline/button'
 import { Heading } from 'volt-preline/heading'
 import { Navbar, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'volt-preline/navbar'

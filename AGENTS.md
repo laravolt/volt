@@ -1,6 +1,6 @@
 # Volt — Agent Guide
 
-Remix **3.0.0-rc.4** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + volt-preline (upgrade notes in `docs/UPGRADING.md`).
+Remix **3.1.0** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + volt-preline (upgrade notes in `docs/UPGRADING.md`).
 
 ## Commands
 ```sh
@@ -30,7 +30,8 @@ Install with `bun install` (npm on this machine blocks packages younger than 7 d
   `volt-catalyst/*` has the identical API for licensed teams. Props accept `className`; form
   controls read ids from `<Field>` context. Style with semantic tokens (`bg-card`, `text-muted-foreground`), not raw palette classes.
 - Interactive UI only hydrates inside a `clientEntry` island under a `public/` dir:
-  `app/ui/public/app-shell.tsx` (StackedLayout + Navbar + account Dropdown + mobile drawer) and
+  `app/ui/public/app-shell.tsx` (`AppShellChrome`: StackedLayoutChrome + Navbar + account Dropdown +
+  mobile drawer; the server-side `app/ui/app-shell.tsx` renders it next to the page content) and
   `app/actions/app/public/users-table.tsx` (Table + Checkbox + Alert confirm). Island props must be
   plain serializable objects typed with `type` aliases (interfaces fail `SerializableProps`). Never
   pass page content, event mixins, or another island through a client entry's children/serialized props;
@@ -50,11 +51,13 @@ Install with `bun install` (npm on this machine blocks packages younger than 7 d
 - After changing UI classes run `npm run css` (or keep `css:watch` running).
 
 ## Remix 3 reference
-`.agents/skills/remix/SKILL.md` and `references/*.md` (shipped by `remix new`). Package READMEs:
-`node_modules/@remix-run/<pkg>/README.md`.
+`.agents/skills/remix/SKILL.md` (shipped by `remix new`): it points at the installed version's docs,
+`node_modules/remix/INDEX.md` and `node_modules/remix/guides/`. Package READMEs:
+`node_modules/@remix-run/<pkg>/README.md`. The component runtime is `remix/component`; `remix/ui` no
+longer exists, and UI primitives come from `@remix-run/ui` (used by `volt-preline`).
 
 ## Gotchas
-- JSX attributes are `className`/`htmlFor` (`jsxImportSource: remix/ui`). Components are
+- JSX attributes are `className`/`htmlFor` (`jsxImportSource: remix/component`). Components are
   `function X(handle: Handle<Props>) { return () => <.../> }`.
 - `data-schema` checks take no message argument; use `.refine(pred, message)` (see `str` helpers).
 - `app/router.ts` must stay side-effect free (tests import it); the real DB opens in `app/app.ts`.

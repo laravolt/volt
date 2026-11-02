@@ -32,8 +32,65 @@ jobs:
       - name: Typecheck
         run: npm run -s typecheck
 
+      - name: Doctor
+        run: npm run -s doctor
+
       - name: Unit tests
         run: npm test
 
       - name: CSS builds
         run: npm run -s css
+
+  e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: CSS builds
+        run: npm run -s css
+
+      - name: E2E tests
+        run: npx remix test --type e2e
+
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build image
+        run: docker build --build-arg BUILD_ID=${{ github.sha }} -t volt:ci .
+
+      - name: Smoke test
+        run: |
+          docker run -d --name volt -p 5555:5555 -e SESSION_SECRET="$(openssl rand -hex 32)" volt:ci
+          for i in $(seq 1 30); do
+            curl -fsS -o /dev/null http://127.0.0.1:5555/login && break
+            sleep 1
+          done
+          html=$(curl -fsS http://127.0.0.1:5555/login)
+          # Fingerprinted URLs (name.@hash.ext) are what the browser requests; the import map
+          # also lists the plain paths and prefixes as keys that map to them.
+          urls=$(printf '%s' "$html" | grep -oE '/assets/[^"'"'"' ]+\.@[^"'"'"' /]+' | sort -u)
+          test -n "$urls"
+          for url in $urls; do
+            curl -fsS -o /dev/null "http://127.0.0.1:5555${url}" || { echo "not served: ${url}"; exit 1; }
+          done
+          echo "served $(printf '%s\n' "$urls" | wc -l) asset URLs"
+
+      - name: Container logs
+        if: always()
+        run: docker logs volt || true

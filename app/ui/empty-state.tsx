@@ -2,7 +2,7 @@
  * Standardized EmptyState component for lists, tables, and search results.
  * Follows UAT brain-v2.1 pattern: clear contextual messaging and recovery actions.
  */
-import type { ElementProps, Handle, RemixNode } from 'remix/ui'
+import type { ElementProps, Handle, RemixNode } from 'remix/component'
 
 export type EmptyStateVariant = 'default' | 'search' | 'error'
 

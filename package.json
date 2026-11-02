@@ -1,10 +1,10 @@
 {
   "name": "volt",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "High-performance full-stack TypeScript framework on Remix 3.0.0-rc.1, recreated from laravolt/laju.",
+  "description": "High-performance full-stack TypeScript framework on Remix 3.1, recreated from laravolt/laju.",
   "scripts": {
     "dev": "NODE_ENV=development node --watch --import remix/node-tsx server.ts",
     "hmr": "NODE_ENV=development node hmr.ts",
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "better-sqlite3": "12.8.0",
-    "remix": "3.0.0-rc.4",
-    "volt-preline": "github:laravolt/volt-preline#v0.2.0"
+    "remix": "3.1.0",
+    "volt-preline": "github:laravolt/volt-preline#v0.3.0"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",

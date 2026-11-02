@@ -2,7 +2,7 @@
  * Admin users table with bulk delete + confirmation (Table/Checkbox/Alert), hydrated island.
  * Follows UAT standards: empty state, Indonesian date formatting, explicit confirmation dialog.
  */
-import { clientEntry, on, type Handle } from 'remix/ui'
+import { clientEntry, on, type Handle } from 'remix/component'
 import { Alert, AlertActions, AlertDescription, AlertTitle } from 'volt-preline/alert'
 import { Badge } from 'volt-preline/badge'
 import { Button } from 'volt-preline/button'
@@ -34,9 +34,18 @@ export const UsersTable = clientEntry<UsersTableProps>(
     let confirming = false
     let selected = 0
     let formEl: HTMLFormElement | null = null
+    let lastUsers: UsersTableUser[] | undefined
 
     return () => {
       let { users, currentUserId, action, csrfToken } = handle.props
+
+      // The island survives frame patches: a new list from the server (after the delete
+      // redirect) closes the confirm dialog instead of keeping it open over the new rows.
+      if (users !== lastUsers) {
+        lastUsers = users
+        confirming = false
+        selected = 0
+      }
 
       if (users.length === 0) {
         return (

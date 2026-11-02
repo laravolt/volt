@@ -1,8 +1,9 @@
 /**
- * Application shell (StackedLayout) as a hydrated island so the account Dropdown and the
- * mobile navigation drawer work. Page content is passed as `children`.
+ * The interactive part of the application shell: header navbar (account Dropdown) and the mobile
+ * navigation drawer, as one island. The page content is rendered by the server-side `AppShell`
+ * (`app/ui/app-shell.tsx`) outside this island, so its own islands and mixins hydrate normally.
  */
-import { clientEntry, on, type Handle, type RemixNode } from 'remix/ui'
+import { clientEntry, on, type Handle } from 'remix/component'
 import { Avatar } from 'volt-preline/avatar'
 import {
   Dropdown,
@@ -14,7 +15,7 @@ import {
 } from 'volt-preline/dropdown'
 import { Navbar, NavbarDivider, NavbarItem, NavbarLabel, NavbarSection, NavbarSpacer } from 'volt-preline/navbar'
 import { Sidebar, SidebarBody, SidebarFooter, SidebarHeader, SidebarItem, SidebarLabel, SidebarSection } from 'volt-preline/sidebar'
-import { StackedLayout } from 'volt-preline/stacked-layout'
+import { StackedLayoutChrome } from 'volt-preline/stacked-layout'
 
 import { routes } from '../../routes.ts'
 import { ArrowRightStartOnRectangleIcon, ChevronDownIcon, HomeIcon, UserIcon } from './icons.tsx'
@@ -22,18 +23,17 @@ import { ArrowRightStartOnRectangleIcon, ChevronDownIcon, HomeIcon, UserIcon } f
 export type ShellUser = { name: string | null; email: string; avatar: string | null; is_admin: boolean }
 
 /** Must stay a type alias (implicit index signature) so it satisfies `SerializableProps`. */
-export type AppShellProps = {
+export type AppShellChromeProps = {
   user: ShellUser
-  csrfToken: string
   currentPath: string
-  children?: RemixNode
 }
 
 export function toShellUser(user: { name: string | null; email: string; avatar: string | null; is_admin: boolean }): ShellUser {
   return { name: user.name, email: user.email, avatar: user.avatar, is_admin: user.is_admin }
 }
 
-const LOGOUT_FORM_ID = 'volt-logout-form'
+/** The hidden logout form rendered by `AppShell`; the island submits it. */
+export const LOGOUT_FORM_ID = 'volt-logout-form'
 
 function initialsOf(name: string | null, email: string) {
   let source = (name && name.trim()) || email
@@ -50,21 +50,19 @@ function submitLogout() {
   if (form instanceof HTMLFormElement) form.requestSubmit()
 }
 
-export const AppShell = clientEntry<AppShellProps>(import.meta.url, function AppShell(handle: Handle<AppShellProps>) {
-  return () => {
-    let { user, csrfToken, currentPath, children } = handle.props
-    let nav = [
-      { href: routes.app.dashboard.href(), label: 'Dashboard', Icon: HomeIcon },
-      { href: routes.app.profile.href(), label: 'Profile', Icon: UserIcon },
-    ]
-    let initials = initialsOf(user.name, user.email)
+export const AppShellChrome = clientEntry<AppShellChromeProps>(
+  import.meta.url,
+  function AppShellChrome(handle: Handle<AppShellChromeProps>) {
+    return () => {
+      let { user, currentPath } = handle.props
+      let nav = [
+        { href: routes.app.dashboard.href(), label: 'Dashboard', Icon: HomeIcon },
+        { href: routes.app.profile.href(), label: 'Profile', Icon: UserIcon },
+      ]
+      let initials = initialsOf(user.name, user.email)
 
-    return (
-      <div data-rmx-key="app-shell">
-        <form id={LOGOUT_FORM_ID} method="post" action={routes.auth.logout.href()} hidden>
-          <input type="hidden" name="_csrf" value={csrfToken} />
-        </form>
-        <StackedLayout
+      return (
+        <StackedLayoutChrome
           navbar={
             <Navbar data-rmx-key="app-header">
               <NavbarItem href={routes.home.href()} aria-label="Volt home">
@@ -133,12 +131,8 @@ export const AppShell = clientEntry<AppShellProps>(import.meta.url, function App
               </SidebarFooter>
             </Sidebar>
           }
-        >
-          <div data-rmx-key="app-main">
-            {children}
-          </div>
-        </StackedLayout>
-      </div>
-    )
-  }
-})
+        />
+      )
+    }
+  },
+)

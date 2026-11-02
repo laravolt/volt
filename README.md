@@ -6,7 +6,7 @@ the way Remix 3 intends: `Request`/`Response`, real `<form>`s that post without 
 app needs on day one: auth, DB-backed sessions, CSRF, an admin shell, a component kit and a strict
 Handler → Service → Repository architecture, so teams ship real systems quickly and consistently.
 
-Baseline: **Remix `3.0.0-rc.4`** (pinned; not Remix v2 / React Router). Upgrade notes for derived apps: `docs/UPGRADING.md`.
+Baseline: **Remix `3.1.0`** (pinned; not Remix v2 / React Router). Upgrade notes for derived apps: `docs/UPGRADING.md`.
 UI: **[volt-preline](https://github.com/laravolt/volt-preline)** (Preline UI 5, MIT) by default;
 `volt-catalyst` (Tailwind Plus Catalyst, private) is a drop-in upgrade for teams with a Tailwind Plus
 license (see [UI kit](#ui-kit)).
@@ -64,7 +64,8 @@ import { Input } from 'volt-preline/input'
 - Dark mode: `installDarkMode()` runs in `app/actions/public/entry.ts` and follows the OS or a
   saved choice (`setTheme('dark')`); it survives Remix frame navigations.
 - Interactive components (dropdown, dialog, listbox, drawers) live inside `clientEntry` islands:
-  `app/ui/public/app-shell.tsx`, `app/actions/app/public/users-table.tsx`.
+  `app/ui/public/app-shell.tsx` (header and drawer only; the page content is rendered by the
+  server-side `app/ui/app-shell.tsx` outside it), `app/actions/app/public/users-table.tsx`.
 - **Switch to Catalyst** (Tailwind Plus license required): add `volt-catalyst` as a dependency,
   replace `volt-preline/` with `volt-catalyst/` in imports and `app/styles/app.css`, and list it
   in `remix.json#assets.allowPackages`. The two packages share the same component API.
@@ -114,7 +115,7 @@ When deploying behind a reverse proxy or TLS termination layer:
    ```
 
 
-> **npm note:** on machines with `minimum-release-age` in `~/.npmrc`, `remix@3.0.0-rc.1` may be
+> **npm note:** on machines with `minimum-release-age` in `~/.npmrc`, a new `remix` release may be
 > hidden from npm for a week after release; `bun install` is unaffected.
 
 ## Roadmap

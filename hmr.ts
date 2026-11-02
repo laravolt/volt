@@ -12,7 +12,7 @@ const appPort = process.env.APP_PORT ? Number.parseInt(process.env.APP_PORT, 10)
 
 const hmrRunner = run('server.ts', {
   env: { ...process.env, PORT: String(appPort), HMR_PROXY_PORT: String(hmrProxyPort) },
-  nodeArgs: ['--import', 'remix/node-tsx', '--import', 'remix/ui-hmr/node'],
+  nodeArgs: ['--import', 'remix/node-tsx', '--import', 'remix/component-hmr/node'],
   browserHmrChannel: { port: hmrEventPort },
 })
 

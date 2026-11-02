@@ -1,7 +1,7 @@
 /**
  * Submit button with pending state and form-level double-submit prevention.
  */
-import { clientEntry, ref, type Handle } from 'remix/ui'
+import { clientEntry, ref, type Handle } from 'remix/component'
 import { Button, type ButtonColor } from 'volt-preline/button'
 
 export type SubmitButtonProps = {

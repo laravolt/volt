@@ -1,6 +1,6 @@
 import { createAssetServer } from 'remix/assets'
 import { loadConfig } from 'remix/cli'
-import { uiHmr } from 'remix/ui-hmr/assets'
+import { componentHmr } from 'remix/component-hmr/assets'
 
 const nodeEnv = process.env.NODE_ENV ?? 'development'
 const isDevelopment = nodeEnv === 'development'
@@ -24,7 +24,7 @@ export const assets = createAssetServer({
         moduleImporter: 'remix/multiple-import-maps-polyfill',
       }
     : undefined,
-  scripts: { loaders: isHmr ? [uiHmr()] : undefined },
+  scripts: { loaders: isHmr ? [componentHmr()] : undefined },
 })
 
 const entry = 'app/actions/public/entry.ts'

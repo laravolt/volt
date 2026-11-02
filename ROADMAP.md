@@ -1,11 +1,14 @@
 # Volt roadmap
 
 Volt is a web-native application starter for Remix 3 by the Laravolt team. This roadmap orders the
-work from where we are (v0.5.0, 2026-09-06) to a public 1.0 that teams can build business systems on.
+work from where we are (v0.6.0, 2026-11-02) to a public 1.0 that teams can build business systems on.
 Dates are targets, not promises; each phase ships behind a tag and a release note.
 
-## Where we are (v0.5.0)
+## Where we are (v0.6.0)
 
+- v0.6.0 (2026-11-02): Remix 3.1.0 stable (from `3.0.0-rc.4`; `remix/ui` → `remix/component`, notes
+  in `docs/UPGRADING.md`), `volt-preline@0.3.0`, app shell split into a server layout and a
+  header/drawer island, admin delete E2E test, CI runs `doctor`, the E2E suite and an image smoke test.
 - v0.5.0 (2026-09-06): island lifecycle fixes (Toast props sync, SubmitButton lock release, single
   `readFlash`), server-rendered theme via `volt-theme` cookie + stable `data-rmx-key` shell +
   global progress indicator + `data-hydrated` marker, `trustProxy` for reverse proxies, e2e harness

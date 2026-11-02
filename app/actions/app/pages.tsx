@@ -1,4 +1,4 @@
-import type { Handle } from 'remix/ui'
+import type { Handle } from 'remix/component'
 import { Button } from 'volt-preline/button'
 import { Divider } from 'volt-preline/divider'
 import { Description, ErrorMessage, Field, Fieldset, Label } from 'volt-preline/fieldset'
@@ -17,7 +17,7 @@ import {
   Notice,
   RequiredLegend,
 } from '../../ui/form.tsx'
-import { AppShell, toShellUser } from '../../ui/public/app-shell.tsx'
+import { AppShell, toShellUser } from '../../ui/app-shell.tsx'
 import { AutoFocusError } from '../../ui/public/auto-focus-error.tsx'
 import { SubmitButton } from '../../ui/public/submit-button.tsx'
 import { Toast, type ToastItem } from '../../ui/public/toast.tsx'

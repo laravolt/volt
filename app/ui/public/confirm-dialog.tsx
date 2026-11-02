@@ -1,7 +1,7 @@
 /**
  * Reusable confirmation dialog wrapping volt-preline Alert.
  */
-import { clientEntry, on, type Handle } from 'remix/ui'
+import { clientEntry, on, type Handle } from 'remix/component'
 import { Alert, AlertActions, AlertDescription, AlertTitle } from 'volt-preline/alert'
 import { Button, type ButtonColor } from 'volt-preline/button'
 

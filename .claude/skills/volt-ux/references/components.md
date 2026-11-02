@@ -110,7 +110,7 @@ checkbox list; do not claim `Combobox` or `Listbox` supports multiple values.
 
 ```tsx
 // app/actions/filters/public/category-filter.tsx
-import { clientEntry, type Handle } from 'remix/ui'
+import { clientEntry, type Handle } from 'remix/component'
 import { Input } from 'volt-preline/input'
 import { Checkbox, CheckboxField } from 'volt-preline/checkbox'
 import { Label } from 'volt-preline/fieldset'
@@ -154,7 +154,7 @@ This behavior needs one app-owned island under `public/`.
 
 ```tsx
 // app/actions/settings/public/region-field.tsx
-import { clientEntry, type Handle } from 'remix/ui'
+import { clientEntry, type Handle } from 'remix/component'
 import { Field, Label, ErrorMessage } from 'volt-preline/fieldset'
 import {
   Combobox,
@@ -391,7 +391,7 @@ Do not nest the `ConfirmDialog` client entry.
 
 ```tsx
 // app/actions/items/public/items-table.tsx
-import { clientEntry, on, type Handle } from 'remix/ui'
+import { clientEntry, on, type Handle } from 'remix/component'
 import { Alert, AlertActions, AlertDescription, AlertTitle } from 'volt-preline/alert'
 import { Button } from 'volt-preline/button'
 
