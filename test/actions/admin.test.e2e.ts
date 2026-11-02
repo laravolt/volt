@@ -34,14 +34,24 @@ describe('Admin E2E', () => {
 
       let dialog = page.getByRole('alertdialog', { name: 'Hapus 1 pengguna yang dipilih?' })
       await dialog.waitFor({ state: 'visible', timeout: 5000 })
+      let deleteRequest = page.waitForResponse(
+        (res) =>
+          res.request().method() === 'POST' &&
+          new URL(res.url()).pathname === routes.app.deleteUsers.href(),
+        { timeout: 5000 },
+      )
       await dialog.getByRole('button', { name: 'Hapus' }).click()
-
-      await page.getByText(member.email).waitFor({ state: 'detached', timeout: 5000 })
-      assert.equal(harness.repos.users.findById(member.id), undefined)
-      assert.ok(harness.repos.users.findById(admin.id))
-
-      // Let the runtime's follow-up GET finish before the harness closes the database.
+      let response = await deleteRequest
+      // Let the runtime follow the redirect before checking the page and closing the database.
       await page.waitForLoadState('networkidle')
+
+      assert.equal(
+        harness.repos.users.findById(member.id),
+        undefined,
+        `member still exists after POST ${response.status()}`,
+      )
+      assert.ok(harness.repos.users.findById(admin.id))
+      await page.getByText(member.email).waitFor({ state: 'detached', timeout: 5000 })
     } finally {
       harness.cleanup()
     }

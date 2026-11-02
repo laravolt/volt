@@ -82,7 +82,8 @@ jobs:
             sleep 1
           done
           html=$(curl -fsS http://127.0.0.1:5555/login)
-          urls=$(printf '%s' "$html" | grep -oE '/assets/[^"'"'"' ]+' | sort -u)
+          # Module URLs only: the import map also lists prefixes such as /assets/app/.
+          urls=$(printf '%s' "$html" | grep -oE '/assets/[^"'"'"' ]+' | grep -v '/$' | sort -u)
           test -n "$urls"
           for url in $urls; do
             curl -fsS -o /dev/null "http://127.0.0.1:5555${url}" || { echo "not served: ${url}"; exit 1; }
