@@ -37,8 +37,5 @@
     "playwright": "1.62.1",
     "tailwindcss": "4.2.2",
     "typescript": "6.0.2"
-  },
-  "patchedDependencies": {
-    "@remix-run/component@1.1.0": "patches/@remix-run%2Fcomponent@1.1.0.patch"
   }
 }

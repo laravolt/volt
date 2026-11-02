@@ -64,7 +64,8 @@ import { Input } from 'volt-preline/input'
 - Dark mode: `installDarkMode()` runs in `app/actions/public/entry.ts` and follows the OS or a
   saved choice (`setTheme('dark')`); it survives Remix frame navigations.
 - Interactive components (dropdown, dialog, listbox, drawers) live inside `clientEntry` islands:
-  `app/ui/public/app-shell.tsx`, `app/actions/app/public/users-table.tsx`.
+  `app/ui/public/app-shell.tsx` (header and drawer only; the page content is rendered by the
+  server-side `app/ui/app-shell.tsx` outside it), `app/actions/app/public/users-table.tsx`.
 - **Switch to Catalyst** (Tailwind Plus license required): add `volt-catalyst` as a dependency,
   replace `volt-preline/` with `volt-catalyst/` in imports and `app/styles/app.css`, and list it
   in `remix.json#assets.allowPackages`. The two packages share the same component API.
@@ -115,8 +116,7 @@ When deploying behind a reverse proxy or TLS termination layer:
 
 
 > **npm note:** on machines with `minimum-release-age` in `~/.npmrc`, a new `remix` release may be
-> hidden from npm for a week after release; `bun install` is unaffected. Install with `bun install`:
-> it also applies the patch in `patches/` (see `docs/UPGRADING.md`).
+> hidden from npm for a week after release; `bun install` is unaffected.
 
 ## Roadmap
 

@@ -6,8 +6,7 @@ Remix **3.1.0** (web-standards Remix, not v2) + better-sqlite3 + Tailwind v4 + v
 ```sh
 npm run dev | npm test | npm run typecheck | npm run migrate | npm run routes | npm run doctor
 ```
-Install with `bun install` (npm on this machine blocks packages younger than 7 days). `bun install`
-applies `patches/@remix-run%2Fcomponent@1.1.0.patch`; see `docs/UPGRADING.md` before bumping `remix`.
+Install with `bun install` (npm on this machine blocks packages younger than 7 days).
 
 ## Non-negotiable rules (see ARCHITECTURE.md)
 1. **Handler → Service → Repository → DB.** No layer may be skipped.
@@ -31,7 +30,8 @@ applies `patches/@remix-run%2Fcomponent@1.1.0.patch`; see `docs/UPGRADING.md` be
   `volt-catalyst/*` has the identical API for licensed teams. Props accept `className`; form
   controls read ids from `<Field>` context. Style with semantic tokens (`bg-card`, `text-muted-foreground`), not raw palette classes.
 - Interactive UI only hydrates inside a `clientEntry` island under a `public/` dir:
-  `app/ui/public/app-shell.tsx` (StackedLayout + Navbar + account Dropdown + mobile drawer) and
+  `app/ui/public/app-shell.tsx` (`AppShellChrome`: StackedLayoutChrome + Navbar + account Dropdown +
+  mobile drawer; the server-side `app/ui/app-shell.tsx` renders it next to the page content) and
   `app/actions/app/public/users-table.tsx` (Table + Checkbox + Alert confirm). Island props must be
   plain serializable objects typed with `type` aliases (interfaces fail `SerializableProps`). Never
   pass page content, event mixins, or another island through a client entry's children/serialized props;

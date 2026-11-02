@@ -17,7 +17,7 @@ import {
   Notice,
   RequiredLegend,
 } from '../../ui/form.tsx'
-import { AppShell, toShellUser } from '../../ui/public/app-shell.tsx'
+import { AppShell, toShellUser } from '../../ui/app-shell.tsx'
 import { AutoFocusError } from '../../ui/public/auto-focus-error.tsx'
 import { SubmitButton } from '../../ui/public/submit-button.tsx'
 import { Toast, type ToastItem } from '../../ui/public/toast.tsx'

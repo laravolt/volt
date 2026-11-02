@@ -6,9 +6,9 @@ import { routes } from '../../app/routes.ts'
 import { createE2EHarness, loginViaBrowser, seedE2EUser, waitForHydration } from '../e2e-helpers.ts'
 
 describe('Admin E2E', () => {
-  // The users table is a client entry inside the AppShell client entry's children, so the
-  // server serializes it (with its Alert) into the shell's hydration props. The confirm
-  // dialog must open with its title wired up and the delete must go through.
+  // The users table is a client entry in the server-rendered page, next to the shell's
+  // AppShellChrome island. The confirm dialog must be named by its title (context from Alert),
+  // the delete must go through, and the table must drop the row after the redirect.
   it('deletes a user after confirming in the dialog', async (t) => {
     let harness = await createE2EHarness('e2e-admin')
     let { user: admin, password } = await seedE2EUser(harness.repos, {
@@ -51,12 +51,8 @@ describe('Admin E2E', () => {
         `member still exists after POST ${response.status()}`,
       )
       assert.ok(harness.repos.users.findById(admin.id))
-
-      // The table does not refresh after the redirect yet (laravolt/volt#22, same on rc.4);
-      // a fresh load must no longer list the user.
-      await page.reload()
-      await waitForHydration(page)
-      assert.equal(await page.getByText(member.email).count(), 0)
+      await page.getByText(member.email).waitFor({ state: 'detached', timeout: 5000 })
+      assert.equal(await page.getByRole('alertdialog').isVisible(), false)
     } finally {
       harness.cleanup()
     }

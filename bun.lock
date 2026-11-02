@@ -20,9 +20,6 @@
       },
     },
   },
-  "patchedDependencies": {
-    "@remix-run/component@1.1.0": "patches/@remix-run%2Fcomponent@1.1.0.patch",
-  },
   "packages": {
     "@emnapi/core": ["@emnapi/core@1.11.2", "", { "dependencies": { "@emnapi/wasi-threads": "1.2.2", "tslib": "^2.4.0" } }, "sha512-TC8MkTuZUtcTSiFeuC0ksCh9QIJ5+F21MvZ4Wn4ORfYaFJ/0dsiudv5tVkejgwZlwQ39jL9WWDe2lz8x0WglOA=="],
 
