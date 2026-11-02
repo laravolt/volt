@@ -39,8 +39,29 @@ export async function createE2EHarness(
  * Wait for Remix UI runtime to complete app.ready() and attach data-hydrated to <html>.
  * Eliminates race conditions where button clicks occur before event mixins are wired.
  */
+const browserErrors = new WeakMap<Page, string[]>()
+
+/** Collect uncaught page errors and console errors so a failed wait can report them. */
+export function trackBrowserErrors(page: Page): string[] {
+  let errors = browserErrors.get(page)
+  if (errors) return errors
+  let list: string[] = []
+  page.on('pageerror', (error) => list.push(`pageerror: ${error.message}`))
+  page.on('console', (message) => {
+    if (message.type() === 'error') list.push(`console.error: ${message.text()}`)
+  })
+  browserErrors.set(page, list)
+  return list
+}
+
 export async function waitForHydration(page: Page) {
-  await page.waitForSelector('html[data-hydrated]', { state: 'attached', timeout: 15000 })
+  let errors = trackBrowserErrors(page)
+  try {
+    await page.waitForSelector('html[data-hydrated]', { state: 'attached', timeout: 15000 })
+  } catch (error) {
+    if (errors.length === 0) throw error
+    throw new Error(`${(error as Error).message}\nBrowser errors:\n${errors.join('\n')}`)
+  }
 }
 
 export async function loginViaBrowser(
@@ -48,6 +69,7 @@ export async function loginViaBrowser(
   identifier: string,
   password = 'password123',
 ) {
+  trackBrowserErrors(page)
   await page.goto(routes.auth.loginPage.href())
   await waitForHydration(page)
   await page.fill('input[name="identifier"]', identifier)
