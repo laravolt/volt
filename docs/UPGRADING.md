@@ -2,6 +2,19 @@
 
 Notes for apps derived from Volt. Each entry lists what Volt changed and how it was checked.
 
+## Volt 0.6.0 → 0.6.1 (account security, dependencies)
+
+Same Remix baseline. Derived apps should port these changes; the tests named here show the expected behaviour.
+
+- **Sessions end when they should.** `AuthService.changePassword()` revokes the user's other sessions (the controller passes `context.session.id` so the current one stays), and `UserService.deleteUsers()` revokes the deleted users' sessions. Files: `app/services/auth.service.ts`, `app/services/user.service.ts`, `app/services/index.ts`, `app/repositories/session.repository.ts`, `app/actions/app/controller.tsx`. Tests: `test/services/auth.service.test.ts`.
+- **Rate limits use the connection address.** `server.ts` passes the `ClientAddress` from `node-fetch-server` (which honours forwarded headers only with `TRUST_PROXY`) into `app/middleware/rate-limit.ts`; the limiter no longer reads `X-Forwarded-For` or `X-Real-IP`. Tests: `test/unit/rate-limit.test.ts`.
+- **The console mailer leaves the body out in production.** With no `RESEND_API_KEY`, production logs recipient and subject only (`app/services/mailer.ts`, `app/router.ts`). Tests: `test/unit/mailer.test.ts`.
+- **Google sign-in links only verified emails.** An existing account is linked only when Google reports the email as verified. An account that was never verified locally gets an unusable password and loses its sessions before the Google user signs in. Files: `app/services/auth.service.ts`, `app/repositories/user.repository.ts`, `app/actions/auth/controller.tsx`. Tests: `test/services/auth.service.test.ts`.
+- **An undecodable `theme` cookie is ignored** instead of failing the render (`app/middleware/theme.ts`; volt-preline 0.3.1 has the same fix).
+- **Dependencies:** TypeScript 7, better-sqlite3 13 (built from source; the Dockerfile build stage has python3, make and g++), Tailwind 4.3.3, Playwright 1.64, `@types/node` 24 to match the `node:24` image.
+
+Checks: `npm run typecheck`, `npm test`, `npx remix test --type e2e`, image smoke test (CI).
+
 ## rc.4 → 3.1.0 (`remix@3.1.0`)
 
 - **`remix/ui` is now `remix/component`.** Import the runtime from `remix/component` and server rendering from `remix/component/server`, and set `"jsxImportSource": "remix/component"` in `tsconfig.json`. For HMR, `remix/ui-hmr/assets` (`uiHmr()`) becomes `remix/component-hmr/assets` (`componentHmr()`), and `hmr.ts` loads `--import remix/component-hmr/node`. The styled components and UI primitives left the `remix` package; Volt only uses them through `volt-preline`, which imports the primitives from `@remix-run/ui`.
