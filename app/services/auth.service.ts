@@ -69,7 +69,14 @@ export class AuthService {
     return toAuthUser(user)
   }
 
-  /** Login/registration via a verified external identity provider (e.g. Google). */
+  /**
+   * Login/registration via an external identity provider (e.g. Google).
+   *
+   * An existing local account is only linked when the provider says the email is verified.
+   * If that local account was never verified, nobody has proven they own the address, so
+   * whoever registered it may not be the provider's user: the old password is replaced with an
+   * unusable one and its sessions are revoked before the provider's user is signed in.
+   */
   async loginExternal(profile: {
     email: string
     name?: string | null
@@ -78,6 +85,15 @@ export class AuthService {
   }): Promise<AuthUser> {
     let email = profile.email.trim().toLowerCase()
     let user = this.users.findByEmail(email)
+    if (user && !profile.emailVerified) {
+      throw errors.unauthorized('Sign in with your password to use this account')
+    }
+    if (user && !user.is_verified) {
+      this.users.updatePassword(user.id, await hashPassword(randomUUID()))
+      this.users.markVerified(user.id)
+      this.sessions.deleteByUserId(user.id)
+      user = this.users.findById(user.id)!
+    }
     if (!user) {
       user = this.users.create({
         id: randomUUID(),

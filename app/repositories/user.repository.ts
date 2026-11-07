@@ -103,6 +103,10 @@ export class UserRepository {
     this.db.run(`update users set ${sets.join(', ')} where id = ?`, params)
   }
 
+  markVerified(id: string): void {
+    this.db.run('update users set is_verified = 1, updated_at = ? where id = ?', [Date.now(), id])
+  }
+
   updatePassword(id: string, hashedPassword: string): void {
     this.db.run('update users set password = ?, updated_at = ? where id = ?', [
       hashedPassword,
