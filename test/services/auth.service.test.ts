@@ -65,6 +65,18 @@ describe('AuthService', () => {
     await assert.rejects(auth.resetPassword(token!, 'again'), (e: unknown) => e instanceof DomainError && e.kind === 'not_found')
   })
 
+  it('password change revokes the other sessions and keeps the current one', async () => {
+    let user = await auth.register({ name: 'A', email: 'a@x.com', password: 'secret1' })
+    repos.sessions.upsert('current', user.id, '[{},{}]', Date.now() + 10000)
+    repos.sessions.upsert('other', user.id, '[{},{}]', Date.now() + 10000)
+
+    await auth.changePassword(user.id, 'secret1', 'newpass1', 'current')
+
+    assert.ok(repos.sessions.findById('current'))
+    assert.equal(repos.sessions.findById('other'), undefined)
+    assert.equal(repos.sessions.countByUserId(user.id), 1)
+  })
+
   it('external login creates the account once', async () => {
     let a = await auth.loginExternal({ email: 'g@x.com', name: 'G', emailVerified: true })
     let b = await auth.loginExternal({ email: 'G@x.com' })
@@ -89,6 +101,25 @@ describe('UserService', () => {
     assert.throws(() => users.deleteUsers(admin, [admin.id]), (e: unknown) => e instanceof DomainError && e.kind === 'validation')
     assert.equal(users.deleteUsers(admin, [member.id]), 1)
     assert.equal(users.listUsers(admin).length, 1)
+    db.close()
+  })
+
+  it('revokes the sessions of deleted users', async () => {
+    let db = await createTestDb()
+    let repos = createRepositories(db)
+    let auth = new AuthService(repos.users, repos.sessions, repos.passwordResets, new MemoryMailer(), '')
+    let users = new UserService(repos.users, repos.sessions)
+    let admin = await auth.register({ name: 'Admin', email: 'admin@x.com', password: 'secret1' })
+    db.run('update users set is_admin = 1 where id = ?', [admin.id])
+    admin = { ...admin, is_admin: true }
+    let member = await auth.register({ name: 'M', email: 'm@x.com', password: 'secret1' })
+    repos.sessions.upsert('member-session', member.id, '[{},{}]', Date.now() + 10000)
+    repos.sessions.upsert('admin-session', admin.id, '[{},{}]', Date.now() + 10000)
+
+    users.deleteUsers(admin, [member.id])
+
+    assert.equal(repos.sessions.countByUserId(member.id), 0)
+    assert.ok(repos.sessions.findById('admin-session'))
     db.close()
   })
 })

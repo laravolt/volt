@@ -24,6 +24,8 @@ export interface CreateServicesOptions {
   db: Db
   mailer?: Mailer
   appUrl: string
+  /** In production the console mailer does not print message bodies (they can hold reset links). */
+  production?: boolean
   resendApiKey?: string
   mailFrom?: string
 }
@@ -45,7 +47,7 @@ export function createServices(options: CreateServicesOptions): {
     options.mailer ??
     (options.resendApiKey
       ? new ResendMailer(options.resendApiKey, options.mailFrom ?? 'noreply@example.com')
-      : new ConsoleMailer())
+      : new ConsoleMailer({ includeBody: !options.production }))
 
   let services: AppServices = {
     auth: new AuthService(
@@ -55,7 +57,7 @@ export function createServices(options: CreateServicesOptions): {
       mailer,
       options.appUrl,
     ),
-    user: new UserService(repositories.users),
+    user: new UserService(repositories.users, repositories.sessions),
   }
   return { services, repositories }
 }

@@ -12,7 +12,18 @@ export interface Mailer {
 }
 
 export class ConsoleMailer implements Mailer {
+  private includeBody: boolean
+
+  /** `includeBody: false` keeps message bodies (which can hold reset links) out of the logs. */
+  constructor(options: { includeBody?: boolean } = {}) {
+    this.includeBody = options.includeBody ?? true
+  }
+
   async send(message: MailMessage) {
+    if (!this.includeBody) {
+      console.log(`[mail] to=${message.to} subject="${message.subject}" (body not logged; set RESEND_API_KEY to deliver mail)`)
+      return
+    }
     console.log(`[mail] to=${message.to} subject="${message.subject}"\n${message.text}`)
   }
 }

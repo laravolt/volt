@@ -92,13 +92,19 @@ export class AuthService {
     return toAuthUser(user)
   }
 
-  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+  /**
+   * Change the password and revoke the user's other sessions. Pass the current session id to
+   * keep the session making the change signed in.
+   */
+  async changePassword(userId: string, currentPassword: string, newPassword: string, keepSessionId?: string) {
     let user = this.users.findById(userId)
     if (!user) throw errors.notFound('User not found')
     if (!(await verifyPassword(currentPassword, user.password))) {
       throw errors.validation('Current password does not match', 'current_password')
     }
     this.users.updatePassword(user.id, await hashPassword(newPassword))
+    if (keepSessionId) this.sessions.deleteByUserIdExcept(user.id, keepSessionId)
+    else this.sessions.deleteByUserId(user.id)
   }
 
   /**

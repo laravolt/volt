@@ -92,7 +92,12 @@ export default createController(routes.app, {
         return context.render(<ProfilePage user={user} profile={profile} csrfToken={csrfToken} passwordErrors={parsed.errors} />, { status: 422 })
       }
       try {
-        await context.services.auth.changePassword(user.id, parsed.value.current_password, parsed.value.new_password)
+        await context.services.auth.changePassword(
+          user.id,
+          parsed.value.current_password,
+          parsed.value.new_password,
+          context.session.id,
+        )
         context.session.flash('success', 'Password changed')
         return redirect(routes.app.profile.href(), 303)
       } catch (error) {
