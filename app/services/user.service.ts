@@ -1,6 +1,7 @@
 /**
  * User/profile use-cases.
  */
+import type { SessionRepository } from '../repositories/session.repository.ts'
 import type { UserRepository, UserRow } from '../repositories/user.repository.ts'
 import { type AuthUser, toAuthUser } from './auth.service.ts'
 import { errors } from './errors.ts'
@@ -30,7 +31,10 @@ function toPublicUser(row: UserRow): PublicUser {
 }
 
 export class UserService {
-  constructor(private users: UserRepository) {}
+  constructor(
+    private users: UserRepository,
+    private sessions?: SessionRepository,
+  ) {}
 
   getProfile(userId: string): PublicUser {
     let user = this.users.findById(userId)
@@ -66,6 +70,9 @@ export class UserService {
     if (!actor.is_admin) throw errors.forbidden('Admin access required')
     let targets = ids.filter((id) => id !== actor.id)
     if (targets.length === 0) throw errors.validation('Select at least one other user', 'ids')
-    return this.users.deleteMany(targets)
+    let deleted = this.users.deleteMany(targets)
+    // A deleted account must not stay signed in anywhere.
+    for (let id of targets) this.sessions?.deleteByUserId(id)
+    return deleted
   }
 }

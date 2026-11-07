@@ -45,6 +45,11 @@ export class SessionRepository {
     return this.db.run('delete from sessions where user_id = ?', [userId]).changes
   }
 
+  /** Revoke every session of a user except the one making the request. */
+  deleteByUserIdExcept(userId: string, keepSessionId: string): number {
+    return this.db.run('delete from sessions where user_id = ? and id != ?', [userId, keepSessionId]).changes
+  }
+
   deleteExpired(now = Date.now()): number {
     return this.db.run('delete from sessions where expires_at < ?', [now]).changes
   }

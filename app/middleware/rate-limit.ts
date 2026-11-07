@@ -1,6 +1,10 @@
 /**
  * In-memory fixed-window rate limiter keyed by client IP + route. Single-node only (v1 scope).
+ *
+ * The client IP is the one node-fetch-server resolved for the connection, which only reads
+ * forwarded headers when TRUST_PROXY is on. Request headers are never used directly.
  */
+import { AsyncLocalStorage } from 'node:async_hooks'
 import type { Middleware } from 'remix/router'
 
 export interface RateLimitOptions {
@@ -21,16 +25,21 @@ export function resetRateLimits() {
   buckets.clear()
 }
 
-function clientKey(headers: Headers): string {
-  let forwarded = headers.get('x-forwarded-for')
-  if (forwarded) return forwarded.split(',')[0]!.trim()
-  return headers.get('x-real-ip') ?? 'local'
+const clientAddress = new AsyncLocalStorage<string>()
+
+/** Run `fn` with the connection's client address (see server.ts). */
+export function withClientAddress<T>(address: string, fn: () => T): T {
+  return clientAddress.run(address, fn)
+}
+
+function clientKey(): string {
+  return clientAddress.getStore() ?? 'local'
 }
 
 export function rateLimit(options: RateLimitOptions): Middleware {
   return async (context, next) => {
     let now = Date.now()
-    let key = `${options.name ?? context.url.pathname}:${clientKey(context.headers)}`
+    let key = `${options.name ?? context.url.pathname}:${clientKey()}`
     let bucket = buckets.get(key)
     if (!bucket || bucket.resetAt <= now) {
       bucket = { count: 0, resetAt: now + options.windowMs }

@@ -1,17 +1,18 @@
 import * as http from 'node:http'
-import { createRequestListener } from 'remix/node-fetch-server'
+import { type ClientAddress, createRequestListener } from 'remix/node-fetch-server'
 
 import { config } from './app/config.ts'
 import { router } from './app/app.ts'
+import { withClientAddress } from './app/middleware/rate-limit.ts'
 
 const hmrProxyPort = process.env.HMR_PROXY_PORT
   ? Number.parseInt(process.env.HMR_PROXY_PORT, 10)
   : null
 
 const server = http.createServer(
-  createRequestListener(async (request) => {
+  createRequestListener(async (request: Request, client: ClientAddress) => {
     try {
-      return await router.fetch(request)
+      return await withClientAddress(client.address, () => router.fetch(request))
     } catch (error) {
       if (!(request.signal.aborted && error === request.signal.reason)) {
         console.error(error)

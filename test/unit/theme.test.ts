@@ -12,6 +12,9 @@ describe('Theme middleware', () => {
     assert.equal(readThemeCookie('volt-theme=light'), 'light')
     assert.equal(readThemeCookie('a=1; volt-theme=dark; b=2'), 'dark')
     assert.equal(readThemeCookie('volt-theme=invalid'), null)
+    // Undecodable values fall back to the system preference instead of throwing
+    assert.equal(readThemeCookie('volt-theme=%E0%A4%A'), null)
+    assert.equal(readThemeCookie('volt-theme=%'), null)
   })
 
   it('provides currentTheme inside theme middleware run', async () => {

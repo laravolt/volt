@@ -68,6 +68,7 @@ export function createAppRouter(options: CreateAppRouterOptions) {
     db: options.db,
     mailer: options.mailer,
     appUrl: config.appUrl,
+    production: config.isProduction,
     resendApiKey: config.mail.resendApiKey,
     mailFrom: config.mail.from,
   })
