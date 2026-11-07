@@ -7,7 +7,7 @@
       "dependencies": {
         "better-sqlite3": "13.0.3",
         "remix": "3.1.0",
-        "volt-preline": "github:laravolt/volt-preline#v0.3.0",
+        "volt-preline": "github:laravolt/volt-preline#v0.3.1",
       },
       "devDependencies": {
         "@playwright/test": "1.64.1",
@@ -629,7 +629,7 @@
 
     "vanilla-calendar-pro": ["vanilla-calendar-pro@3.3.1", "", {}, "sha512-3+PCVaaZoF03+D9oXzPQwEMu5DeAlllSOfpSmzojGZSLFb9OJYK4wMtMlPDNOe59DyEy8CGrc3Aw9TvlAnoANg=="],
 
-    "volt-preline": ["volt-preline@github:laravolt/volt-preline#1a7e8ad", { "dependencies": { "@remix-run/ui": "0.13.0", "preline": "5.0.0" }, "peerDependencies": { "@tailwindcss/forms": "^0.5.0", "remix": "^3.1.0", "tailwindcss": "^4.0.0" } }, "laravolt-volt-preline-1a7e8ad", "sha512-UZXbECoLIcVsG8N9agTGQjkYxnAfg4JrvJ1j1L015rRrJV1S1hT3llkpZgHeK9uSpYEuZQsNQvnxjScK8tUk3Q=="],
+    "volt-preline": ["volt-preline@github:laravolt/volt-preline#8b564b3", { "dependencies": { "@remix-run/ui": "0.13.0", "preline": "5.0.0" }, "peerDependencies": { "@tailwindcss/forms": "^0.5.0", "remix": "^3.1.0", "tailwindcss": "^4.0.0" } }, "laravolt-volt-preline-8b564b3", "sha512-umN3HnyZrHeff0k3ow7DOtAQqOPmEVcVUw16J0wpeFloYMB409xI2wZVX4TwSZrhZTZOMwFtVegRiaodjjE6Gw=="],
 
     "@parcel/watcher/node-addon-api": ["node-addon-api@7.1.1", "", {}, "sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ=="],
 
