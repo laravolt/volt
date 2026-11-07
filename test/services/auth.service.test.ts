@@ -79,9 +79,33 @@ describe('AuthService', () => {
 
   it('external login creates the account once', async () => {
     let a = await auth.loginExternal({ email: 'g@x.com', name: 'G', emailVerified: true })
-    let b = await auth.loginExternal({ email: 'G@x.com' })
+    let b = await auth.loginExternal({ email: 'G@x.com', emailVerified: true })
     assert.equal(a.id, b.id)
     assert.equal(a.is_verified, true)
+  })
+
+  it('external login does not link an account when the provider has not verified the email', async () => {
+    await auth.register({ name: 'A', email: 'a@x.com', password: 'secret1' })
+    await assert.rejects(
+      auth.loginExternal({ email: 'a@x.com', emailVerified: false }),
+      (e: unknown) => e instanceof DomainError && e.kind === 'unauthorized',
+    )
+  })
+
+  it('external login takes over an unverified local account from whoever registered it', async () => {
+    let squatter = await auth.register({ name: 'S', email: 'owner@x.com', password: 'squatter1' })
+    assert.equal(squatter.is_verified, false)
+    repos.sessions.upsert('squatter-session', squatter.id, '[{},{}]', Date.now() + 10000)
+
+    let owner = await auth.loginExternal({ email: 'owner@x.com', name: 'Owner', emailVerified: true })
+
+    assert.equal(owner.id, squatter.id)
+    assert.equal(owner.is_verified, true)
+    assert.equal(repos.sessions.countByUserId(owner.id), 0)
+    await assert.rejects(
+      auth.login({ identifier: 'owner@x.com', password: 'squatter1' }),
+      (e: unknown) => e instanceof DomainError && e.kind === 'unauthorized',
+    )
   })
 })
 

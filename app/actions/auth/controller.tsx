@@ -8,6 +8,7 @@ import { redirect } from 'remix/response/redirect'
 import { Session } from 'remix/session'
 
 import { config } from '../../config.ts'
+import { DomainError } from '../../services/errors.ts'
 import { requireGuest, setSessionUser } from '../../middleware/auth.ts'
 import { getCsrfToken } from '../../middleware/csrf.ts'
 import { rateLimit } from '../../middleware/rate-limit.ts'
@@ -170,12 +171,19 @@ export default function authController(rateLimits: boolean) {
           context.session.flash('error', 'Google account has no email address')
           return redirect(routes.auth.loginPage.href(), 303)
         }
-        let user = await context.services.auth.loginExternal({
-          email: result.profile.email,
-          name: result.profile.name ?? null,
-          avatar: result.profile.picture ?? null,
-          emailVerified: result.profile.email_verified ?? false,
-        })
+        let user
+        try {
+          user = await context.services.auth.loginExternal({
+            email: result.profile.email,
+            name: result.profile.name ?? null,
+            avatar: result.profile.picture ?? null,
+            emailVerified: result.profile.email_verified ?? false,
+          })
+        } catch (error) {
+          if (!(error instanceof DomainError)) throw error
+          context.session.flash('error', error.message)
+          return redirect(routes.auth.loginPage.href(), 303)
+        }
         let session = completeAuth(context)
         setSessionUser(session, user)
         return redirect(routes.app.dashboard.href(), 303)
