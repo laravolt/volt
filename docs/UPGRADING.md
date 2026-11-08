@@ -2,6 +2,18 @@
 
 Notes for apps derived from Volt. Each entry lists what Volt changed and how it was checked.
 
+## Volt 0.6.1 → 0.6.2 (`remix@3.2.0`)
+
+- **Remix 3.2.0** and **volt-preline 0.3.3** (`@remix-run/ui` 0.13.1 on `@remix-run/component` 1.2.0). Volt needed no code changes.
+- What 3.2 changes that derived apps should check:
+  - **`css()` and `style` output.** Numbers stay unitless for properties that take bare numbers (`flex: 2` is a grow factor, not `2px`), custom property names keep their casing, vendor-prefixed keys get their leading dash, and generated `rmxc-*` class names change. Volt and volt-preline use no `css()` or numeric `style` values, and no test matches `rmxc-*` classes.
+  - **Boolean `aria-*` and `data-*` props** render `"true"`/`"false"` on the server, and `data-rmx-document={false}` / `data-rmx-preserve-dom={false}` now omit the attribute. Volt passes these as strings.
+  - **Client-entry props.** Objects that only look like elements, such as markup parsed from JSON, now throw `Invalid child node`. Pass JSX or plain data.
+  - **Optional:** `csp()` from `remix/middleware/csp` adds a nonce-based Content Security Policy. Volt does not enable it yet.
+- The context bug in client-entry props (remix-run/remix#12172) is still open in 3.2.0. Keep page content out of client entries, as described under 3.1.0 below.
+
+Checks: `npm run typecheck`, `npm run doctor`, `npm test`, `npx remix test --type e2e`, image smoke test (CI).
+
 ## Volt 0.6.0 → 0.6.1 (account security, dependencies)
 
 Same Remix baseline. Derived apps should port these changes; the tests named here show the expected behaviour.
